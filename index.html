@@ -1,1 +1,105 @@
-index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MagicHand Control Web</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: cyan;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      margin: 10px;
+      text-shadow: 0 0 10px cyan;
+    }
+
+    video, canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    #magic {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      font-size: 30px;
+      text-shadow: 0 0 20px cyan;
+    }
+  </style>
+</head>
+<body>
+
+<h1>✨ Magic Hand Control ✨</h1>
+<video id="video" width="640" height="480" autoplay></video>
+<canvas id="canvas" width="640" height="480"></canvas>
+<div id="magic">✋ Hand Raise = MAGIC</div>
+
+<!-- MediaPipe Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+<script>
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const magicText = document.getElementById("magic");
+
+// Camera Access
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => video.srcObject = stream);
+
+// MediaPipe Hands
+const hands = new Hands({
+  locateFile: file =>
+    `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+});
+
+hands.setOptions({
+  maxNumHands: 1,
+  minDetectionConfidence: 0.7,
+  minTrackingConfidence: 0.7
+});
+
+hands.onResults(results => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  if (results.multiHandLandmarks) {
+    for (const landmarks of results.multiHandLandmarks) {
+      drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {color: 'cyan'});
+      drawLandmarks(ctx, landmarks, {color: 'white'});
+
+      // Index finger tip (magic trigger)
+      const indexY = landmarks[8].y;
+
+      if (indexY < 0.3) {
+        magicText.innerHTML = "🔥 MAGIC ACTIVATED 🔥";
+        document.body.style.background = "radial-gradient(circle, cyan, black)";
+      } else {
+        magicText.innerHTML = "✋ Raise Hand for Magic";
+        document.body.style.background = "black";
+      }
+    }
+  }
+});
+
+// Camera Utils
+const camera = new Camera(video, {
+  onFrame: async () => {
+    await hands.send({ image: video });
+  },
+  width: 640,
+  height: 480
+});
+
+camera.start();
+</script>
+
+</body>
+</html>
