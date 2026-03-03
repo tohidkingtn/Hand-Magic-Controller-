@@ -1,116 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Magic Hand Air Drawing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Rewards Zone</title>
 
 <style>
-  body {
-    margin: 0;
-    background: black;
-    overflow: hidden;
-  }
+body{
+ font-family:Arial;
+ background:#f2f2f2;
+ text-align:center;
+}
 
-  video {
-    display: none; /* camera hidden */
-  }
+h1{
+ background:#111;
+ color:white;
+ padding:15px;
+}
 
-  canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-  }
+.container{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:center;
+}
 
-  #info {
-    position: fixed;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    color: cyan;
-    font-size: 18px;
-    text-shadow: 0 0 10px cyan;
-  }
+.card{
+ background:white;
+ width:260px;
+ margin:15px;
+ padding:15px;
+ border-radius:10px;
+ box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+.card img{
+ width:100%;
+ border-radius:8px;
+}
+
+button{
+ margin-top:10px;
+ padding:10px 15px;
+ background:#28a745;
+ color:white;
+ border:none;
+ border-radius:6px;
+ cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<video id="video" playsinline></video>
-<canvas id="canvas"></canvas>
-<div id="info">☝️ Index Finger se Hawa me Draw Karo</div>
+<h1>🎁 Free Rewards Collection</h1>
 
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<div class="container" id="products"></div>
 
 <script>
-const video = document.getElementById("video");
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const items = [
 
-let lastX = null;
-let lastY = null;
+{
+ name:"Random Earbuds",
+ img:"https://images.unsplash.com/photo-1585386959984-a41552231658"
+},
 
-/* MediaPipe Hands */
-const hands = new Hands({
-  locateFile: file =>
-    `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-});
+{
+ name:"Stylish Shoes",
+ img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+},
 
-hands.setOptions({
-  maxNumHands: 1,
-  modelComplexity: 1,
-  minDetectionConfidence: 0.7,
-  minTrackingConfidence: 0.7
-});
+{
+ name:"Free Fire Diamond 500",
+ img:"https://i.imgur.com/9Xn4K3K.png"
+},
 
-hands.onResults(results => {
-  if (!results.multiHandLandmarks) {
-    lastX = null;
-    lastY = null;
-    return;
-  }
+{
+ name:"PUBG UC 500",
+ img:"https://i.imgur.com/0Z8FQ6S.png"
+}
 
-  const finger = results.multiHandLandmarks[0][8];
+];
 
-  const x = finger.x * canvas.width;
-  const y = finger.y * canvas.height;
+// random items show function
+function showRandomItems(){
 
-  ctx.strokeStyle = "cyan";
-  ctx.lineWidth = 6;
-  ctx.lineCap = "round";
-  ctx.shadowColor = "cyan";
-  ctx.shadowBlur = 20;
+ let container = document.getElementById("products");
+ container.innerHTML="";
 
-  if (lastX !== null) {
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  }
+ let shuffled = items.sort(()=>0.5-Math.random());
 
-  lastX = x;
-  lastY = y;
-});
+ shuffled.forEach(item=>{
+   container.innerHTML += `
+     <div class="card">
+       <img src="${item.img}">
+       <h3>${item.name}</h3>
+       <button onclick="claim()">Claim Now</button>
+     </div>
+   `;
+ });
 
-/* Camera */
-const camera = new Camera(video, {
-  onFrame: async () => {
-    await hands.send({ image: video });
-  },
-  width: 640,
-  height: 480
-});
+}
 
-camera.start();
+function claim(){
+ alert("Reward claim process start!");
+}
 
-/* Resize support */
-window.addEventListener("resize", () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
+showRandomItems();
+
 </script>
 
 </body>
