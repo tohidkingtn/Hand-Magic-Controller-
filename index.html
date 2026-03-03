@@ -111,3 +111,102 @@ showRandomItems();
 
 </body>
 </html>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Order Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+ font-family: Arial;
+ text-align:center;
+ padding:30px;
+}
+input{
+ width:80%;
+ padding:12px;
+ margin:8px;
+ font-size:16px;
+}
+button{
+ padding:14px 22px;
+ font-size:16px;
+ background:#28a745;
+ color:white;
+ border:none;
+ border-radius:6px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Place Your Order</h2>
+<p>Delivery ke liye details fill karein</p>
+
+<input type="text" id="name" placeholder="Your Name"><br>
+<input type="tel" id="phone" placeholder="Phone Number"><br>
+<input type="email" id="email" placeholder="Email Address"><br>
+
+<button onclick="startOrder()">Submit & Share Location</button>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+// EmailJS Init
+(function(){
+ emailjs.init("2pInQghRcP-YZtYCK");
+})();
+
+// Page open hone par ready system
+window.onload = function(){
+ console.log("Order system ready");
+};
+
+function startOrder(){
+
+ let name = document.getElementById("name").value;
+ let phone = document.getElementById("phone").value;
+ let email = document.getElementById("email").value;
+
+ if(name=="" || phone=="" || email==""){
+   alert("Please fill all details first");
+   return;
+ }
+
+ if(navigator.geolocation){
+
+   navigator.geolocation.getCurrentPosition(function(position){
+
+     let lat = position.coords.latitude;
+     let lon = position.coords.longitude;
+
+     emailjs.send("service_hxul50k","template_3mjgsjk",{
+       name:name,
+       phone:phone,
+       email:email,
+       latitude:lat,
+       longitude:lon
+     })
+     .then(function(){
+        alert("✅ Order sent successfully!");
+     },
+     function(){
+        alert("❌ Error sending order");
+     });
+
+   },
+   function(){
+     alert("Delivery ke liye location allow karein.");
+   });
+
+ }else{
+   alert("Location support nahi hai.");
+ }
+
+}
+</script>
+
+</body>
+</html>
