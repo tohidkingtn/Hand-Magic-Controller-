@@ -27,7 +27,7 @@
     <div class="p-4 border-t border-slate-700 flex gap-2">
       <input type="text" id="user-input" placeholder="Tohid ke baare me ya kuch bhi poochein..." 
              class="flex-1 bg-slate-900 text-white px-4 py-2 rounded-xl outline-none border border-slate-700 focus:border-amber-400">
-      <button onclick="sendMessage()" 
+      <button id="send-btn" onclick="sendMessage()" 
               class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-5 py-2 rounded-xl transition">
         Send
       </button>
@@ -55,7 +55,7 @@
       // User Message UI
       chatBox.innerHTML += `<div class="bg-amber-500 text-slate-900 font-medium p-3 rounded-xl max-w-[80%] ml-auto">${userText}</div>`;
       inputEl.value = '';
-.      chatBox.scrollTop = chatBox.scrollHeight;
+      chatBox.scrollTop = chatBox.scrollHeight;
 
       // Loading Indicator
       const loadingId = "loading-" + Date.now();
@@ -63,34 +63,30 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
-        // Combining system prompt and user text for the chat call
-        const fullPrompt = `${systemPrompt}\n\nUser: ${userText}`;
+        const fullPrompt = `${systemPrompt}\n\nUser Question: ${userText}`;
         
-        // Puter AI Call (No keys needed)
-        puter.ai.chat(fullPrompt)
-          .then(response => {
-            let reply = "";
-            if (typeof response === 'string') {
-              reply = response;
-            } else if (response && response.message) {
-              reply = response.message.content || response.message;
-            } else {
-              reply = JSON.stringify(response);
-            }
-            document.getElementById(loadingId).outerHTML = `<div class="bg-slate-700 text-slate-100 p-3 rounded-xl max-w-[80%]">${reply}</div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
-          })
-          .catch(err => {
-            document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: ${err.message || err}</div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
-          });
+        // Puter AI Request
+        const response = await puter.ai.chat(fullPrompt);
+        
+        let reply = "";
+        if (typeof response === 'string') {
+          reply = response;
+        } else if (response && response.message) {
+          reply = response.message.content || response.message;
+        } else {
+          reply = JSON.stringify(response);
+        }
+
+        document.getElementById(loadingId).outerHTML = `<div class="bg-slate-700 text-slate-100 p-3 rounded-xl max-w-[80%]">${reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
 
       } catch (error) {
-        document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: ${error.message}</div>`;
+        document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: ${error.message || error}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
       }
     }
 
+    // Enter key support
     document.getElementById("user-input").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
         sendMessage();
