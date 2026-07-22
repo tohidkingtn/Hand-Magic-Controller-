@@ -5,31 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MR Tohid's AI Assistant</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Puter.js Load kar rahe hain (No API Key Required) -->
+  <script src="https://js.puter.com/v2/"></script>
 </head>
 <body class="bg-slate-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
 
   <div class="w-full max-w-lg bg-slate-800 rounded-2xl shadow-xl flex flex-col h-[85vh] border border-slate-700">
     <!-- Header -->
-    <div class="p-4 border-b border-slate-700 text-center font-bold text-xl text-amber-400 flex items-center justify-between">
-      <span class="flex items-center gap-2">🤖 My AI Assistant</span>
-      <button onclick="toggleKeyInput()" class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-lg border border-slate-600 text-slate-300">
-        🔑 Key Settings
-      </button>
-    </div>
-
-    <!-- API Key Input Section -->
-    <div id="key-section" class="p-3 bg-slate-950 border-b border-slate-700 flex gap-2">
-      <input type="password" id="api-key-input" placeholder="Yahan Apni API Key Paste Karein" 
-             class="flex-1 bg-slate-900 text-white text-sm px-3 py-2 rounded-xl outline-none border border-slate-700 focus:border-amber-400">
-      <button onclick="saveKey()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-xl text-sm transition">
-        Save Key
-      </button>
+    <div class="p-4 border-b border-slate-700 text-center font-bold text-xl text-amber-400 flex items-center justify-center gap-2">
+      🤖 MR Tohid's AI Assistant
     </div>
 
     <!-- Chat Messages Container -->
     <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-3">
       <div class="bg-slate-700 text-slate-200 p-3 rounded-xl max-w-[80%] self-start">
-        Namaste! Main **MR Tohid** ka Personal AI Assistant hoon. Upar "Key Settings" par click karke apni API key daalein aur mujhse kuch bhi poochein!
+        Namaste! Main **MR Tohid** ka Personal AI Assistant hoon. Ab yahan koi API key ki zarurat nahi hai, seedha baat karo!
       </div>
     </div>
 
@@ -55,49 +45,17 @@
     - Hamesha respectful, friendly aur thoda stylish tone me jawab do (Hindi/Hinglish me).
     `;
 
-    window.onload = function() {
-      const savedKey = localStorage.getItem('gemini_api_key');
-      if (savedKey) {
-        document.getElementById('api-key-input').value = savedKey;
-        document.getElementById('key-section').classList.add('hidden');
-      }
-    };
-
-    function toggleKeyInput() {
-      const section = document.getElementById('key-section');
-      section.classList.toggle('hidden');
-    }
-
-    function saveKey() {
-      const key = document.getElementById('api-key-input').value.trim();
-      if (!key) {
-        alert("Kripya sahi API Key enter karein!");
-        return;
-      }
-      localStorage.setItem('gemini_api_key', key);
-      alert("API Key Successfully Save Ho Gayi Hai!");
-      document.getElementById('key-section').classList.add('hidden');
-    }
-
     async function sendMessage() {
-      const apiKey = localStorage.getItem('gemini_api_key') || document.getElementById('api-key-input').value.trim();
-
-      if (!apiKey) {
-        alert("Pehle Upar 'Key Settings' me jaakar apni API Key Save Karein!");
-        document.getElementById('key-section').classList.remove('hidden');
-        return;
-      }
-
       const inputEl = document.getElementById('user-input');
       const chatBox = document.getElementById('chat-box');
-      const prompt = inputEl.value.trim();
+      const userText = inputEl.value.trim();
 
-      if (!prompt) return;
+      if (!userText) return;
 
       // User Message UI
-      chatBox.innerHTML += `<div class="bg-amber-500 text-slate-900 font-medium p-3 rounded-xl max-w-[80%] ml-auto">${prompt}</div>`;
+      chatBox.innerHTML += `<div class="bg-amber-500 text-slate-900 font-medium p-3 rounded-xl max-w-[80%] ml-auto">${userText}</div>`;
       inputEl.value = '';
-      chatBox.scrollTop = chatBox.scrollHeight;
+.      chatBox.scrollTop = chatBox.scrollHeight;
 
       // Loading Indicator
       const loadingId = "loading-" + Date.now();
@@ -105,35 +63,32 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
-        // Direct gemini-2.0-flash endpoint
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            system_instruction: {
-              parts: [{ text: systemPrompt }]
-            },
-            contents: [{ parts: [{ text: prompt }] }]
+        // Combining system prompt and user text for the chat call
+        const fullPrompt = `${systemPrompt}\n\nUser: ${userText}`;
+        
+        // Puter AI Call (No keys needed)
+        puter.ai.chat(fullPrompt)
+          .then(response => {
+            let reply = "";
+            if (typeof response === 'string') {
+              reply = response;
+            } else if (response && response.message) {
+              reply = response.message.content || response.message;
+            } else {
+              reply = JSON.stringify(response);
+            }
+            document.getElementById(loadingId).outerHTML = `<div class="bg-slate-700 text-slate-100 p-3 rounded-xl max-w-[80%]">${reply}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
           })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || data.error) {
-          const errorMsg = data.error?.message || "Invalid Key or Network Error";
-          document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Google Error: ${errorMsg}</div>`;
-          return;
-        }
-
-        const reply = data.candidates[0].content.parts[0].text;
-        document.getElementById(loadingId).outerHTML = `<div class="bg-slate-700 text-slate-100 p-3 rounded-xl max-w-[80%]">${reply}</div>`;
+          .catch(err => {
+            document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: ${err.message || err}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+          });
 
       } catch (error) {
         document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: ${error.message}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
       }
-      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     document.getElementById("user-input").addEventListener("keypress", function(event) {
