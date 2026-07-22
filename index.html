@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MR Tohid's AI Assistant</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Puter.js Load kar rahe hain (No API Key Required) -->
-  <script src="https://js.puter.com/v2/"></script>
 </head>
 <body class="bg-slate-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
 
@@ -19,7 +17,7 @@
     <!-- Chat Messages Container -->
     <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-3">
       <div class="bg-slate-700 text-slate-200 p-3 rounded-xl max-w-[80%] self-start">
-        Namaste! Main **MR Tohid** ka Personal AI Assistant hoon. Ab yahan koi API key ki zarurat nahi hai, seedha baat karo!
+        Namaste! Main **MR Tohid** ka Personal AI Assistant hoon. Ab ye bina kisi popup ya key ke direct chalega!
       </div>
     </div>
 
@@ -27,7 +25,7 @@
     <div class="p-4 border-t border-slate-700 flex gap-2">
       <input type="text" id="user-input" placeholder="Tohid ke baare me ya kuch bhi poochein..." 
              class="flex-1 bg-slate-900 text-white px-4 py-2 rounded-xl outline-none border border-slate-700 focus:border-amber-400">
-      <button id="send-btn" onclick="sendMessage()" 
+      <button onclick="sendMessage()" 
               class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-5 py-2 rounded-xl transition">
         Send
       </button>
@@ -35,15 +33,7 @@
   </div>
 
   <script>
-    const systemPrompt = `
-    Tum MR Tohid ke dwara banaye gaye AI Assistant ho. 
-    Jab bhi koi user Tohid ya MR Tohid ke baare mein pooche, toh unhe ye baatein batana:
-    - Tohid ek passionate creator aur tech/gaming enthusiast hain (jinke screen name MR Tohid hai).
-    - Unhe PUBG gaming, high-end photography/editing, aur Royal Enfield (Bullet/GT 650) & KTM bikes ka bohot shauk hai.
-    - Wo coding aur smart web tools banane me interest rakhte hain.
-    - Unka attitude bohot helpful aur creative hai.
-    - Hamesha respectful, friendly aur thoda stylish tone me jawab do (Hindi/Hinglish me).
-    `;
+    const systemPrompt = "Tum MR Tohid ke dwara banaye gaye AI Assistant ho. Tohid ek passionate creator, tech/gaming enthusiast hain (PUBG, photography, Royal Enfield, KTM bikes). Hamesha friendly aur Hinglish me jawab do.";
 
     async function sendMessage() {
       const inputEl = document.getElementById('user-input');
@@ -63,30 +53,18 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
-        const fullPrompt = `${systemPrompt}\n\nUser Question: ${userText}`;
-        
-        // Puter AI Request
-        const response = await puter.ai.chat(fullPrompt);
-        
-        let reply = "";
-        if (typeof response === 'string') {
-          reply = response;
-        } else if (response && response.message) {
-          reply = response.message.content || response.message;
-        } else {
-          reply = JSON.stringify(response);
-        }
+        // Free Pollinations AI API (No keys, No popups, Direct text response)
+        const encodedPrompt = encodeURIComponent(`${systemPrompt}\nUser: ${userText}`);
+        const res = await fetch(`https://text.pollinations.ai/${encodedPrompt}`);
+        const reply = await res.text();
 
         document.getElementById(loadingId).outerHTML = `<div class="bg-slate-700 text-slate-100 p-3 rounded-xl max-w-[80%]">${reply}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-
       } catch (error) {
-        document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: ${error.message || error}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
+        document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: ${error.message}</div>`;
       }
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Enter key support
     document.getElementById("user-input").addEventListener("keypress", function(event) {
       if (event.key === "Enter") {
         sendMessage();
