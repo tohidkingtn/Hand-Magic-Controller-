@@ -17,7 +17,7 @@
     <!-- Chat Messages Container -->
     <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-3">
       <div class="bg-slate-700 text-slate-200 p-3 rounded-xl max-w-[80%] self-start">
-        Namaste! Main **MR Tohid** ka Personal AI Assistant hoon. Ab ye ekdum free free API se connect hai, bina kisi key ya payment issue ke!
+        Namaste! Main **MR Tohid** ka Personal AI Assistant hoon. Ab bina kisi API Key ya limit ke mujhse kuch bhi poochein!
       </div>
     </div>
 
@@ -33,7 +33,7 @@
   </div>
 
   <script>
-    const systemPrompt = "Tum MR Tohid ke dwara banaye gaye AI Assistant ho. Tohid ek passionate creator, tech/gaming enthusiast hain (PUBG, photography, Royal Enfield, KTM bikes). Hamesha friendly aur Hinglish me jawab do.";
+    const systemPrompt = "Tum MR Tohid ke dwara banaye gaye AI Assistant ho. Tohid ek passionate creator, tech/gaming enthusiast hain (PUBG, photography, Royal Enfield, KTM bikes). Unka nature helpful aur creative hai. Hamesha friendly aur Hinglish me short & cool jawab do.";
 
     async function sendMessage() {
       const inputEl = document.getElementById('user-input');
@@ -53,35 +53,23 @@
       chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
-        // Free Public LLM Proxy Endpoint
-        const response = await fetch("https://text.pollinations.ai/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userText }
-            ],
-            model: "openai"
-          })
-        });
+        // Complete Prompt Formatting
+        const fullQuery = `${systemPrompt}\nUser Question: ${userText}`;
+        const encodedQuery = encodeURIComponent(fullQuery);
+
+        // Free Direct GET Request (No key, No header issues)
+        const response = await fetch(`https://text.pollinations.ai/${encodedQuery}?model=openai&seed=${Math.floor(Math.random() * 1000)}`);
 
         if (!response.ok) {
-          // Backup free API route if POST gets limited
-          const altRes = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(userText)}&format=json`);
-          const altData = await altRes.json();
-          const replyText = altData.AbstractText || "Main abhi iska jawab khoj raha hoon, kripya phir se poochein.";
-          document.getElementById(loadingId).outerHTML = `<div class="bg-slate-700 text-slate-100 p-3 rounded-xl max-w-[80%]">${replyText}</div>`;
-          return;
+          throw new Error("Server Response Error");
         }
 
         const reply = await response.text();
+
         document.getElementById(loadingId).outerHTML = `<div class="bg-slate-700 text-slate-100 p-3 rounded-xl max-w-[80%]">${reply}</div>`;
 
       } catch (error) {
-        document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: ${error.message}</div>`;
+        document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: Connection nahi ho pa raha hai, dobara try karein.</div>`;
       }
 
       chatBox.scrollTop = chatBox.scrollHeight;
