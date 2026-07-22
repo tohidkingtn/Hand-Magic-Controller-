@@ -80,7 +80,7 @@
     }
 
     async function sendMessage() {
-      const apiKey = localStorage.getItem('geminitoken') || localStorage.getItem('gemini_api_key') || document.getElementById('api-key-input').value.trim();
+      const apiKey = localStorage.getItem('gemini_api_key') || document.getElementById('api-key-input').value.trim();
 
       if (!apiKey) {
         alert("Pehle Upar 'Key Settings' me jaakar apni API Key Save Karein!");
@@ -102,35 +102,41 @@
       chatBox.innerHTML += `<div id="${loadingId}" class="bg-slate-700 text-slate-400 p-3 rounded-xl max-w-[80%] italic">Soch raha hoon...</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      try {
-        // Using standard gemini-1.5-flash with URL query parameter
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            system_instruction: {
-              parts: [{ text: systemPrompt }]
-            },
-            contents: [{ parts: [{ text: prompt }] }]
-          })
-        });
+      // In teeno models ko sequence me check karega
+      const modelsToTry = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.5-flash"];
+      let lastError = "";
+      let success = false;
 
-        const data = await response.json();
+      for (let model of modelsToTry) {
+        try {
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              system_instruction: { parts: [{ text: systemPrompt }] },
+              contents: [{ parts: [{ text: prompt }] }]
+            })
+          });
 
-        if (!response.ok || data.error) {
-          const errorMsg = data.error?.message || "Invalid Key or Network Error";
-          document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Google Error: ${errorMsg}</div>`;
-          return;
+          const data = await response.json();
+
+          if (response.ok && data.candidates && data.candidates[0].content.parts[0].text) {
+            const reply = data.candidates[0].content.parts[0].text;
+            document.getElementById(loadingId).outerHTML = `<div class="bg-slate-700 text-slate-100 p-3 rounded-xl max-w-[80%]">${reply}</div>`;
+            success = true;
+            break;
+          } else if (data.error) {
+            lastError = data.error.message;
+          }
+        } catch (e) {
+          lastError = e.message;
         }
-
-        const reply = data.candidates[0].content.parts[0].text;
-        document.getElementById(loadingId).outerHTML = `<div class="bg-slate-700 text-slate-100 p-3 rounded-xl max-w-[80%]">${reply}</div>`;
-
-      } catch (error) {
-        document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Error: ${error.message}</div>`;
       }
+
+      if (!success) {
+        document.getElementById(loadingId).outerHTML = `<div class="bg-red-500/20 text-red-300 p-3 rounded-xl max-w-[80%]">Google Error: ${lastError}</div>`;
+      }
+
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
