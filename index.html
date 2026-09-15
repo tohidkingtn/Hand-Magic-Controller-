@@ -1,86 +1,62 @@
 <!doctype html>
 <html lang="hi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wedding Invitation - Premium Template</title>
-
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Wedding Invitation - Premium</title>
   <style>
     :root{
-      --bg:#0b0a12;
-      --text:#f5f2ff;
-      --muted:rgba(245,242,255,.78);
-      --gold:#d7b46a;
-      --gold2:#f2d7-??;
+      --bg0:#07060d;
+      --bg1:#0b0a15;
       --card: rgba(255,255,255,.06);
-      --line: rgba(215,180,106,.35);
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
-      --radius: 24px;
+      --card2: rgba(255,255,255,.09);
+      --text:#f4f1ff;
+      --muted: rgba(244,241,255,.72);
+      --gold:#d7b46a;
+      --stroke: rgba(215,180,106,.28);
+      --stroke2: rgba(255,255,255,.12);
+      --shadow: 0 22px 70px rgba(0,0,0,.55);
+      --radius: 22px;
       --max: 1100px;
-
+      --ease: cubic-bezier(.2,.9,.2,1);
       --reveal-y: 18px;
       --reveal-opacity: 0;
-      --reveal-duration: 720ms;
-      --reveal-ease: cubic-bezier(.2,.9,.2,1);
+      --reveal-duration: 780ms;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
-      background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(215,180,106,.22), transparent 50%),
-        radial-gradient(900px 600px at 85% 20%, rgba(165,125,255,.18), transparent 55%),
-        radial-gradient(700px 500px at 50% 95%, rgba(215,180,106,.15), transparent 55%),
-        var(--bg);
       color: var(--text);
-      line-height:1.45;
+      background:
+        radial-gradient(1200px 700px at 14% 5%, rgba(215,180,106,.22), transparent 55%),
+        radial-gradient(900px 600px at 88% 18%, rgba(150,120,255,.18), transparent 58%),
+        radial-gradient(700px 500px at 45% 92%, rgba(215,180,106,.14), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
       overflow-x:hidden;
     }
     a{color:inherit}
-
-    /* Scroll Reveal */
-    .reveal{
-      opacity: var(--reveal-opacity);
-      transform: translateY(var(--reveal-y));
-      filter: blur(6px);
-      transition:
-        opacity var(--reveal-duration) var(--reveal-ease),
-        transform var(--reveal-duration) var(--reveal-ease),
-        filter var(--reveal-duration) var(--reveal-ease);
-      will-change: opacity, transform, filter;
-    }
-    .reveal.is-visible{
-      opacity:1;
-      transform: translateY(0);
-      filter: blur(0);
-    }
-
-    .wrap{max-width:var(--max); margin:0 auto; padding: 26px 18px 70px;}
-    .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      padding: 6px 0 22px;
+    .wrap{max-width:var(--max); margin:0 auto; padding: 26px 16px 70px;}
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; padding: 10px 0 18px;
     }
     .brand{
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      font-size:12px;
-      color: rgba(245,242,255,.72);
+      letter-spacing:.22em; text-transform:uppercase; font-size:12px;
+      color: rgba(244,241,255,.70);
+      white-space:nowrap;
     }
-    .badge{
+    .chip{
       padding:10px 14px;
-      border:1px solid var(--line);
-      background: rgba(0,0,0,.12);
-      border-radius: 999px;
-      color: rgba(245,242,255,.78);
+      border-radius:999px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.16);
+      color: rgba(244,241,255,.78);
       font-size:13px;
       white-space:nowrap;
     }
 
-    /* Hero */
+    /* HERO */
     .hero{
       border-radius: var(--radius);
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
@@ -89,232 +65,243 @@
       overflow:hidden;
       position:relative;
     }
-    .hero::before{
+    .hero:before{
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(640px 240px at 15% 0%, rgba(215,180,106,.35), transparent 55%),
-        radial-gradient(520px 260px at 88% 6%, rgba(165,125,255,.25), transparent 60%);
-      pointer-events:none;
-      opacity:.92;
+        radial-gradient(680px 260px at 12% 0%, rgba(215,180,106,.40), transparent 55%),
+        radial-gradient(520px 260px at 90% 8%, rgba(150,120,255,.25), transparent 60%);
+      opacity:.9; pointer-events:none;
     }
     .hero-inner{
       position:relative;
       padding: 38px 18px;
       display:grid;
-      grid-template-columns: 1.15fr .85fr;
+      grid-template-columns: 1.1fr .9fr;
       gap: 18px;
       align-items:center;
     }
-    @media (max-width: 900px){
-      .hero-inner{grid-template-columns: 1fr; padding: 28px 14px;}
-      .badge{display:none;}
+    @media (max-width: 920px){
+      .hero-inner{grid-template-columns:1fr; padding: 28px 14px;}
     }
 
-    /* Name block */
-    .center{
-      text-align:center;
-      padding: 8px 8px 0;
-    }
+    .hero-left{text-align:center;}
     .kicker{
-      display:inline-block;
-      padding: 8px 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 10px 14px;
+      border:1px solid var(--stroke2);
       background: rgba(0,0,0,.12);
-      color: rgba(245,242,255,.78);
-      font-size: 13px;
+      border-radius:999px;
+      color: rgba(244,241,255,.80);
+      font-size:13px;
       letter-spacing:.10em;
-      text-transform: uppercase;
+      text-transform:uppercase;
       margin-bottom: 14px;
     }
-    .title{
-      margin: 6px 0 8px;
-      font-size: clamp(30px, 6vw, 60px);
-      letter-spacing: .02em;
-      line-height:1.1;
+    .kdot{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 7px rgba(215,180,106,.12);
     }
-    .title span{
-      color: var(--gold);
-      text-shadow: 0 0 18px rgba(215,180,106,.28);
-      display:inline-block;
+    .names{
+      margin-top: 8px;
+      font-size: clamp(34px, 5.2vw, 64px);
+      letter-spacing:.02em;
+      line-height:1.05;
     }
+    .names span{color: var(--gold); text-shadow: 0 0 22px rgba(215,180,106,.28)}
     .subtitle{
-      margin: 8px auto 0;
-      max-width: 60ch;
-      color: rgba(245,242,255,.80);
+      margin: 14px auto 0;
+      max-width: 62ch;
       font-size: 16px;
+      color: var(--muted);
     }
 
-    /* Line-by-line template */
-    .invite-lines{
+    /* line-by-line block */
+    .invite-block{
       margin: 22px auto 0;
-      max-width: 720px;
-      border-top: 1px solid rgba(215,180,106,.35);
-      padding-top: 18px;
+      max-width: 760px;
       text-align:center;
+      border-top:1px solid rgba(215,180,106,.35);
+      padding-top: 18px;
     }
-    .line{
-      margin: 10px 0;
-      color: rgba(245,242,255,.86);
-      font-size: 16px;
-    }
-    .line strong{
-      color: rgba(245,242,255,.98);
-      font-weight: 700;
-    }
-    .line.gold strong{
-      color: var(--gold);
-    }
-    .mini{
-      margin: 6px 0;
-      font-size: 13px;
-      color: rgba(245,242,255,.70);
-    }
-    .divider{
-      height:1px;
-      background: linear-gradient(90deg, transparent, rgba(215,180,106,.65), transparent);
-      border:0;
-      max-width: 560px;
-      margin: 16px auto;
-    }
+    .invline{margin: 10px 0; font-size: 16px; color: rgba(244,241,255,.90)}
+    .invline strong{font-weight:800}
+    .invline.gold strong{color: var(--gold)}
+    .small{font-size:13px; color: rgba(244,241,255,.70); margin-top: 6px}
 
-    /* Photo */
-    .photo{
+    /* PHOTO / RIGHT */
+    .hero-right{
+      display:flex; flex-direction:column; gap:12px;
+      align-items:stretch;
+    }
+    .photoCard{
       border-radius: 18px;
       border:1px solid rgba(255,255,255,.12);
       background:
-        linear-gradient(135deg, rgba(215,180,106,.18), rgba(165,125,255,.12)),
+        linear-gradient(135deg, rgba(215,180,106,.18), rgba(150,120,255,.12)),
         rgba(255,255,255,.03);
       min-height: 320px;
-      display:flex;
-      align-items:flex-end;
-      padding: 14px;
       position:relative;
       overflow:hidden;
+      padding: 14px;
+      display:flex; align-items:flex-end;
     }
-    .photo::after{
+    .photoCard:after{
       content:"";
       position:absolute; inset:0;
-      background: radial-gradient(420px 240px at 50% 0%, rgba(215,180,106,.18), transparent 60%);
+      background: radial-gradient(520px 260px at 50% 0%, rgba(215,180,106,.18), transparent 60%);
       pointer-events:none;
       opacity:.9;
     }
-    .photo .hint{
-      width:100%;
+    .photoCard .img{
+      position:absolute; inset:0;
+      background: rgba(0,0,0,.18);
+      display:flex; align-items:center; justify-content:center;
+      color: rgba(244,241,255,.82);
+      font-size: 14px;
+      text-align:center;
+      padding: 18px;
+    }
+    .photoCard img{
+      width:100%; height:100%;
+      object-fit:cover; display:none; /* replace later */
+      position:absolute; inset:0;
+    }
+    .photoCard .label{
       position:relative;
-      background: rgba(0,0,0,.20);
+      z-index:2;
+      width:100%;
+      background: rgba(0,0,0,.22);
       border:1px solid rgba(255,255,255,.10);
       border-radius: 14px;
-      padding: 12px 12px;
-      color: rgba(245,242,255,.78);
-      font-size: 13px;
+      padding: 12px;
       backdrop-filter: blur(6px);
-    }
-    .photo img{
-      width:100%; height:100%; object-fit:cover;
-      position:absolute; inset:0;
-      display:none; /* replace later */
-      opacity:.95;
+      color: rgba(244,241,255,.78);
+      font-size: 13px;
     }
 
-    /* Section grid */
-    .section{
-      margin-top: 18px;
+    /* Sections */
+    .grid{
+      margin-top: 16px;
       display:grid;
       grid-template-columns: repeat(12, 1fr);
       gap: 14px;
     }
-
     .card{
       grid-column: span 6;
       border-radius: var(--radius);
-      background: var(--card);
       border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 16px 40px rgba(0,0,0,.28);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 18px 50px rgba(0,0,0,.25);
       padding: 18px;
       position:relative;
       overflow:hidden;
     }
-    .card::before{
+    .card:before{
       content:"";
       position:absolute; inset:-1px;
-      background: radial-gradient(520px 220px at 20% 0%, rgba(215,180,106,.14), transparent 55%);
+      background: radial-gradient(560px 220px at 18% 0%, rgba(215,180,106,.14), transparent 55%);
       pointer-events:none;
-      opacity:.6;
+      opacity:.7;
     }
-    .card > * { position:relative; }
-
-    @media (max-width: 900px){
-      .card{grid-column: span 12;}
-    }
+    .card > *{position:relative}
+    @media (max-width: 920px){ .card{grid-column: span 12;} }
 
     .card h3{
-      margin: 0 0 10px;
+      margin:0 0 12px;
       font-size: 18px;
-      letter-spacing:.03em;
+      letter-spacing:.02em;
     }
     .shine{
-      background: linear-gradient(90deg, rgba(215,180,106,.0), rgba(215,180,106,.62), rgba(215,180,106,.0));
+      background: linear-gradient(90deg, rgba(215,180,106,.0), rgba(215,180,106,.7), rgba(215,180,106,.0));
       background-size: 200% 100%;
-      animation: shine 3.2s linear infinite;
+      animation: shine 3s linear infinite;
       display:inline-block;
-      padding: 0 2px;
+      padding: 0 4px;
     }
-    @keyframes shine{
-      0%{background-position: 200% 0}
-      100%{background-position: -200% 0}
-    }
+    @keyframes shine{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
     .row{
-      display:flex; gap: 12px; align-items:flex-start;
-      padding: 10px 0;
+      display:flex; gap:12px; align-items:flex-start; padding: 10px 0;
     }
     .dot{
-      width:10px; height:10px; border-radius: 50%;
+      width:10px; height:10px; border-radius:50%;
       background: var(--gold);
       box-shadow: 0 0 0 6px rgba(215,180,106,.12);
-      margin-top: 6px;
-      flex:0 0 auto;
+      margin-top:6px; flex:0 0 auto;
     }
-    .label{color: rgba(245,242,255,.72); font-size: 13px;}
-    .value{font-size: 16px; color: rgba(245,242,255,.92);}
+    .label{font-size:13px; color: rgba(244,241,255,.72)}
+    .value{font-size:16px; color: rgba(244,241,255,.94); margin-top: 3px}
 
+    /* Timeline */
+    .timeline{
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .titem{
+      border-radius: 16px;
+      background: rgba(0,0,0,.10);
+      border:1px solid rgba(255,255,255,.10);
+      padding: 12px;
+      display:flex; gap:12px; align-items:flex-start;
+    }
+    .tmeta{
+      min-width: 120px;
+      text-align:left;
+    }
+    .tmeta .tdate{
+      font-size:13px; color: rgba(244,241,255,.68)
+    }
+    .tmeta .ttime{
+      margin-top: 6px;
+      font-size: 16px;
+      color: rgba(244,241,255,.95);
+    }
+    .ttext .tname{font-size:16px; font-weight:700}
+    .ttext .tdesc{margin-top: 3px; font-size:13px; color: rgba(244,241,255,.72)}
+
+    /* Gallery */
     .gallery{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
     }
-    @media (max-width: 480px){ .gallery{grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width: 520px){ .gallery{grid-template-columns: repeat(2,1fr)} }
     .tile{
       aspect-ratio: 1 / 1;
       border-radius: 16px;
       border:1px solid rgba(255,255,255,.10);
       background:
-        linear-gradient(135deg, rgba(215,180,106,.18), rgba(165,125,255,.10)),
+        linear-gradient(135deg, rgba(215,180,106,.18), rgba(150,120,255,.10)),
         rgba(255,255,255,.03);
-      overflow:hidden;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color: rgba(245,242,255,.74);
-      font-size: 12px;
-      text-align:center;
-      padding: 10px;
+      display:flex; align-items:center; justify-content:center;
+      color: rgba(244,241,255,.78);
       position:relative;
+      overflow:hidden;
+      text-align:center;
+      padding:10px;
+      font-size:12px;
     }
-    .tile::after{
+    .tile span{z-index:1; position:relative}
+    .tile:after{
       content:"";
       position:absolute; inset:0;
       background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.35));
-      opacity:.6;
-      pointer-events:none;
+      opacity:.7;
     }
-    .tile span{position:relative; z-index:1}
 
-    .btnrow{
-      display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;
+    /* RSVP */
+    .rsvpgrid{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top: 10px}
+    @media (max-width: 520px){ .rsvpgrid{grid-template-columns:1fr} }
+    .field{
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 12px;
+      color: rgba(244,241,255,.78);
+      font-size: 14px;
     }
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px}
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
       padding: 12px 14px;
@@ -330,8 +317,7 @@
       background: rgba(255,255,255,.05);
     }
 
-    /* About box */
-    .aboutbox{grid-column: span 12;}
+    /* About (500 letters) */
     textarea.abouttext{
       width:100%;
       min-height: 140px;
@@ -344,26 +330,29 @@
       outline:none;
       font-size: 14px;
       font-family: inherit;
-      margin-top: 10px;
       line-height:1.5;
+      margin-top: 10px;
     }
-    .charline{
-      display:flex; justify-content:space-between; gap:12px;
-      margin-top: 8px;
-      color: rgba(245,242,255,.70);
-      font-size: 12px;
-      letter-spacing:.02em;
+    .charline{display:flex; justify-content:space-between; gap:12px; margin-top: 8px; color: rgba(244,241,255,.70); font-size:12px}
+
+    /* Scroll Reveal */
+    .reveal{
+      opacity: var(--reveal-opacity);
+      transform: translateY(var(--reveal-y));
+      filter: blur(7px);
+      transition:
+        opacity var(--reveal-duration) var(--ease),
+        transform var(--reveal-duration) var(--ease),
+        filter var(--reveal-duration) var(--ease);
     }
-    .smallnote{
-      color: rgba(245,242,255,.72);
-      font-size: 12px;
-      margin: 8px 0 0;
+    .reveal.is-visible{
+      opacity:1; transform: translateY(0); filter: blur(0);
     }
 
     .foot{
       margin-top: 18px;
       text-align:center;
-      color: rgba(245,242,255,.55);
+      color: rgba(244,241,255,.55);
       font-size: 12px;
       letter-spacing:.06em;
     }
@@ -372,77 +361,73 @@
 
 <body>
   <div class="wrap">
-    <div class="top">
+    <div class="topbar">
       <div class="brand">Wedding Invitation</div>
-      <div class="badge">Aapki hazri = humari khushi ✨</div>
+      <div class="chip">Aapki hazri = humari khushi ✨</div>
     </div>
 
-    <div class="hero">
+    <section class="hero">
       <div class="hero-inner">
-        <div class="center">
-          <div class="kicker reveal">Save the Date</div>
+        <div class="hero-left">
+          <div class="kicker reveal"><span class="kdot"></span> Save the Date</div>
 
-          <div class="title reveal" style="transition-delay:120ms;">
-            <span id="groomName">Arjun</span> &amp; <span id="brideName">Meera</span>
+          <div class="names reveal" style="transition-delay:120ms;">
+            <span id="groom">Rahul</span> &amp; <span id="bride">Priya</span>
           </div>
 
-          <p class="subtitle reveal" style="transition-delay:200ms;">
-            Dil se amantrit hai aapko is shubh avsar par.</p>
+          <p class="subtitle reveal" style="transition-delay:180ms;">
+            Dil se amantrit hai aapko hamare shubh vivah avsar par.
+            Kripya samay par padhariye aur humein aashirwad dijiye.
+          </p>
 
-          <hr class="divider reveal" style="transition-delay:260ms;" />
-
-          <!-- Line by line -->
-          <div class="invite-lines">
-            <div class="line reveal" style="transition-delay:60ms;"><strong>Request the honor</strong></div>
-            <div class="line reveal" style="transition-delay:110ms;">of your gracious presence</div>
-            <div class="line reveal gold" style="transition-delay:160ms;">
+          <div class="invite-block">
+            <div class="invline reveal" style="transition-delay:220ms;"><strong>Request the honor</strong></div>
+            <div class="invline reveal" style="transition-delay:260ms;">of your gracious presence</div>
+            <div class="invline gold reveal" style="transition-delay:310ms;">
               on our <strong>Wedding Ceremony</strong>
             </div>
 
-            <div class="mini reveal" style="transition-delay:210ms;">
-              Shubh Muhurat
+            <div class="small reveal" style="transition-delay:360ms;">Shubh Muhurat</div>
+            <div class="invline reveal" style="transition-delay:410ms;">
+              <strong style="color:var(--gold)">Date:</strong> <span id="dateText">12 December 2026</span>
             </div>
-
-            <div class="line reveal" style="transition-delay:260ms;">
-              <strong style="color:var(--gold)">Date:</strong>
-              <span id="dateText">18 December 2026</span>
+            <div class="invline reveal" style="transition-delay:460ms;">
+              <strong style="color:var(--gold)">Time:</strong> <span id="timeText">7:00 PM onwards</span>
             </div>
-
-            <div class="line reveal" style="transition-delay:310ms;">
-              <strong style="color:var(--gold)">Time:</strong>
-              <span id="timeText">7:30 PM onwards</span>
+            <div class="small reveal" style="transition-delay:510ms;">Location</div>
+            <div class="invline reveal" style="transition-delay:560ms;">
+              <span id="venueText">The Royal Banquet Hall, Mumbai</span>
             </div>
-
-            <div class="mini reveal" style="transition-delay:360ms;">
-              Location
+            <div class="small reveal" style="transition-delay:610ms;">
+              Aapke aane se aur raunak badhegi.
             </div>
+          </div>
+        </div>
 
-            <div class="line reveal" style="transition-delay:410ms;">
-              <span id="venueText">Royal Garden Banquets</span>
+        <div class="hero-right">
+          <div class="photoCard reveal" style="transition-delay:220ms;">
+            <img id="heroImg" alt="Couple Photo" />
+            <div class="img">
+              Couple Photo<br/>Placeholder
+              <div style="margin-top:10px; font-size:12px; color: rgba(244,241,255,.65);">
+                Baad me img tag ka <b>src</b> add kar dena.
+              </div>
             </div>
-
-            <div class="mini reveal" style="transition-delay:460ms;">
-              Aapke aane se is khushi me aur raunak aayegi.
+            <div class="label">
+              <b style="color:var(--text)">Name + Photo Area</b><br/>
+              Premium layout feel ban chuka hai.
             </div>
           </div>
 
-        </div>
-
-        <div class="photo reveal" style="transition-delay:160ms;">
-          <!-- Replace image later -->
-          <img id="heroImg" alt="Couple Photo" />
-          <div class="hint">
-            <b style="color:rgba(245,242,255,.98);">Name + Photo Area</b><br/>
-            Abhi placeholder hai.<br/>
-            Baad me yahan apni couple photo lagwa dena (img tag me src add karke).
+          <div class="chip reveal" style="text-align:center; transition-delay:320ms;">
+            Couple Journey • Love • Blessings
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="section">
-      <!-- Details -->
-      <div class="card reveal" style="transition-delay:80ms;">
+    <div class="grid">
+      <div class="card reveal" style="transition-delay:70ms;">
         <h3><span class="shine">Wedding Details</span></h3>
 
         <div class="row">
@@ -468,148 +453,121 @@
             <div class="value">Traditional / Semi-formal</div>
           </div>
         </div>
-
-        <p class="smallnote">
-          Tip: Location me exact landmark add kar do, guests ko easy hoga.
-        </p>
       </div>
 
-      <!-- Program -->
-      <div class="card reveal" style="transition-delay:140ms;">
-        <h3><span class="shine">Program / Schedule</span></h3>
+      <div class="card reveal" style="transition-delay:120ms;">
+        <h3><span class="shine">Program (Timeline)</span></h3>
 
-        <div class="row">
-          <div class="dot"></div>
-          <div>
-            <div class="label">Mehendi</div>
-            <div class="value">17 Dec, 11:00 AM</div>
+        <div class="timeline">
+          <div class="titem">
+            <div class="tmeta">
+              <div class="tdate">17 Dec</div>
+              <div class="ttime">11:00 AM</div>
+            </div>
+            <div class="ttext">
+              <div class="tname">Mehendi</div>
+              <div class="tdesc">Family & Friends ke saath rang-bharai</div>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="dot"></div>
-          <div>
-            <div class="label">Sangeet</div>
-            <div class="value">18 Dec, 4:30 PM</div>
+          <div class="titem">
+            <div class="tmeta">
+              <div class="tdate">18 Dec</div>
+              <div class="ttime">4:30 PM</div>
+            </div>
+            <div class="ttext">
+              <div class="tname">Sangeet</div>
+              <div class="tdesc">Music, dance & celebration</div>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="dot"></div>
-          <div>
-            <div class="label">Muhurta / Wedding</div>
-            <div class="value">18 Dec, 7:30 PM</div>
+          <div class="titem">
+            <div class="tmeta">
+              <div class="tdate">18 Dec</div>
+              <div class="ttime">7:30 PM</div>
+            </div>
+            <div class="ttext">
+              <div class="tname">Wedding Ceremony</div>
+              <div class="tdesc">Shubh Muhurat ke saath</div>
+            </div>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="dot"></div>
-          <div>
-            <div class="label">Reception</div>
-            <div class="value">19 Dec, 9:00 PM</div>
+          <div class="titem">
+            <div class="tmeta">
+              <div class="tdate">19 Dec</div>
+              <div class="ttime">9:00 PM</div>
+            </div>
+            <div class="ttext">
+              <div class="tname">Reception</div>
+              <div class="tdesc">Dinner & greetings</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Gallery -->
-      <div class="card reveal" style="transition-delay:200ms;">
+      <div class="card reveal" style="transition-delay:180ms;">
         <h3><span class="shine">Gallery</span></h3>
-
         <div class="gallery">
-          <div class="tile"><span>Photo 1<br/>(Replace me)</span></div>
-          <div class="tile"><span>Photo 2<br/>(Replace me)</span></div>
-          <div class="tile"><span>Photo 3<br/>(Replace me)</span></div>
+          <div class="tile"><span>Photo 1<br/>(Replace)</span></div>
+          <div class="tile"><span>Photo 2<br/>(Replace)</span></div>
+          <div class="tile"><span>Photo 3<br/>(Replace)</span></div>
           <div class="tile"><span>Photo 4<br/>(Optional)</span></div>
           <div class="tile"><span>Photo 5<br/>(Optional)</span></div>
           <div class="tile"><span>Photo 6<br/>(Optional)</span></div>
         </div>
-
-        <p class="smallnote">
-          Agar aap chaho to main next version me tiles me <code>&lt;img&gt;</code> support bhi add kar dunga.
-        </p>
+        <div class="small" style="margin-top:10px;">
+          Next step: main aapke liye tiles me <code>&lt;img&gt;</code> support bhi add kar dunga (images lag jaayengi).
+        </div>
       </div>
 
-      <!-- RSVP -->
-      <div class="card reveal" style="transition-delay:260ms;">
+      <div class="card reveal" style="transition-delay:240ms;">
         <h3><span class="shine">RSVP</span></h3>
-
-        <div class="row">
-          <div class="dot"></div>
-          <div>
-            <div class="label">RSVP Contact</div>
-            <div class="value" id="contactDetail">+91 98765 43210</div>
-          </div>
+        <div class="rsvpgrid">
+          <div class="field"><b style="color:var(--text)">Name:</b><br/>Guest Name</div>
+          <div class="field"><b style="color:var(--text)">Attending:</b><br/>Yes / No</div>
+          <div class="field"><b style="color:var(--text)">Contact:</b><br/><span id="contactText">+91 98765 43210</span></div>
+          <div class="field"><b style="color:var(--text)">Message:</b><br/>Please bless the couple.</div>
         </div>
-
-        <div class="row">
-          <div class="dot"></div>
-          <div>
-            <div class="label">Message</div>
-            <div class="value">Please join us and bless the couple.</div>
-          </div>
-        </div>
-
         <div class="btnrow">
           <a class="btn" href="tel:+919876543210">Call RSVP</a>
-          <a class="btn secondary" href="#about">About</a>
+          <a class="btn secondary" href="#mapCard">Location</a>
         </div>
-
-        <p class="smallnote">
-          Next step me main RSVP ke liye Google Form link bhi add kar sakta hoon.
-        </p>
       </div>
 
-      <!-- Map -->
-      <div class="card reveal" id="mapCard" style="grid-column: span 12; transition-delay:320ms;">
+      <div class="card reveal" id="mapCard" style="grid-column: span 12; transition-delay:300ms;">
         <h3><span class="shine">Location / Map</span></h3>
-        <p class="smallnote" style="margin-top:0;">
-          Neeche placeholder hai. Aap Google Maps me “Share → Embed map” se jo iframe code milega wo yahan paste kar dena.
-        </p>
-
-        <div class="tile" style="height:260px; border-radius: 18px; margin-top: 12px;">
-          <span>
-            MAP PLACEHOLDER<br/>
-            (Embed iframe paste here)
-          </span>
-        </div>
-
-        <div class="row" style="margin-top: 10px;">
+        <div class="row" style="padding-top:0;">
           <div class="dot"></div>
           <div>
             <div class="label">Location Text</div>
             <div class="value" id="locationText">Royal Garden Banquets, Sector 21, Noida</div>
           </div>
         </div>
-      </div>
 
-      <!-- About 500 letters -->
-      <div class="card aboutbox reveal" id="about" style="transition-delay:380ms;">
-        <h3><span class="shine">About Us (Max 500 Letters)</span></h3>
-
-        <div class="smallnote">
-          Neeche 500 letters ke andar apne baare me likho.
+        <div class="tile" style="height:260px; border-radius: 18px; margin-top: 10px;">
+          <span>
+            Map Placeholder<br/>(Embed iframe paste here)
+          </span>
         </div>
 
-        <textarea
-          id="aboutText"
-          maxlength="500"
-          class="abouttext"
-          placeholder="Example: Hum dono ki love story... (500 letters max)"
-        ></textarea>
+        <div class="small" style="margin-top:12px;">
+          Aap Google Maps → Share → Embed map ka iframe code yahin replace kar dena.
+        </div>
+      </div>
 
+      <div class="card reveal" style="grid-column: span 12; transition-delay:360ms;">
+        <h3><span class="shine">About (Max 500 Letters)</span></h3>
+        <div class="small">Neeche apne baare me likho. Limit: 500 characters.</div>
+        <textarea id="aboutText" class="abouttext" maxlength="500" placeholder="Example: Hum dono ne..."></textarea>
         <div class="charline">
           <span id="countLeft">500 letters left</span>
           <span id="countUsed">0 used</span>
         </div>
-
-        <div class="smallnote">
-          Aap chahein to main next version me “English + Hindi” dual lines bhi bana dunga.
-        </div>
       </div>
     </div>
 
-    <div class="foot reveal" style="transition-delay:420ms;">
-      © <span id="year"></span> Wedding Invitation • Premium HTML (Free)
+    <div class="foot">
+      © <span id="year"></span> Wedding Invitation • Premium Template (Free HTML)
     </div>
   </div>
 
@@ -633,15 +591,15 @@
     // Scroll reveal
     const nodes = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          entry.target.classList.add('is-visible');
-          io.unobserve(entry.target);
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('is-visible');
+          io.unobserve(e.target);
         }
       });
-    }, { threshold: 0.18, rootMargin: "0px 0px -10% 0px" });
+    }, { threshold: 0.18, rootMargin: "0px 0px -12% 0px" });
 
-    nodes.forEach(n => io.observe(n));
+    nodes.forEach(n=>io.observe(n));
   </script>
 </body>
   </html>
