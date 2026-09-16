@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LuxeStore | India's Premium Shopping Hub</title>
+  <title>LuxeStore | Premium Shopping Experience</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #2874f0;        /* Flipkart Blue */
-      --secondary: #fb641b;      /* Flipkart Orange */
-      --amazon-yellow: #ffd814;  /* Amazon Buy Now Yellow */
+      --primary: #2874f0;
+      --secondary: #fb641b;
+      --amazon-yellow: #ffd814;
       --amazon-orange: #ffa41c;
       --bg: #f1f3f6;
       --card-bg: #ffffff;
       --text: #212121;
       --text-muted: #878787;
-      --accent: #388e3c;        /* Green Offers */
+      --accent: #388e3c;
       --border: #e0e0e0;
     }
 
@@ -28,21 +28,52 @@
     .brand { font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; font-style: italic; display: flex; align-items: center; gap: 0.3rem; }
     .brand span { color: #ffe500; font-size: 0.9rem; font-style: normal; }
 
-    .search-bar { flex: 1; max-width: 600px; position: relative; background: #fff; border-radius: 4px; display: flex; }
+    /* Auto-Suggest Search Box */
+    .search-wrapper { flex: 1; max-width: 600px; position: relative; }
+    .search-bar { background: #fff; border-radius: 4px; display: flex; width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .search-bar input { width: 100%; border: none; outline: none; padding: 0.7rem 1rem; border-radius: 4px 0 0 4px; font-size: 0.95rem; }
     .search-bar button { background: #fff; border: none; padding: 0 1rem; color: var(--primary); cursor: pointer; border-radius: 0 4px 4px 0; }
+
+    .suggestions-dropdown {
+      position: absolute;
+      top: 105%;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 120;
+      display: none;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    .suggestions-dropdown.active { display: block; }
+    .suggestion-item {
+      padding: 0.7rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #f0f0f0;
+      color: #333;
+    }
+    .suggestion-item:last-child { border-bottom: none; }
+    .suggestion-item:hover { background-color: #f1f7ff; color: var(--primary); }
+    .suggestion-item i { color: var(--text-muted); font-size: 0.85rem; }
 
     .nav-actions { display: flex; align-items: center; gap: 1.5rem; }
     .nav-btn { background: transparent; border: none; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; position: relative; }
     .cart-badge { background: #ff6161; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.75rem; position: absolute; top: -8px; right: -10px; font-weight: bold; }
 
-    /* Amazon/Flipkart Subnav Categories */
+    /* Category Filter Strip */
     .cat-strip { background: #fff; border-bottom: 1px solid var(--border); overflow-x: auto; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .cat-strip-inner { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0.6rem 1rem; }
     .cat-item { padding: 0.4rem 1rem; font-size: 0.9rem; font-weight: 500; color: #333; cursor: pointer; border-radius: 20px; border: 1px solid transparent; }
     .cat-item.active, .cat-item:hover { background: #ebf4ff; color: var(--primary); border-color: #bad8ff; }
 
-    /* Amazon/Flipkart Grid Layout */
+    /* Product Grid */
     .main-container { max-width: 1300px; margin: 1.5rem auto; padding: 0 1rem; }
     .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
 
@@ -53,21 +84,18 @@
 
     .item-title { font-size: 0.95rem; font-weight: 600; color: #212121; line-height: 1.3; height: 2.6rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 0.4rem; }
     .rating-badge { background: #388e3c; color: white; display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.75rem; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: bold; width: fit-content; }
-    .assured-badge { height: 16px; margin-left: 0.5rem; vertical-align: middle; }
 
     .price-section { margin: 0.6rem 0; display: flex; align-items: baseline; gap: 0.5rem; }
     .curr-price { font-size: 1.25rem; font-weight: 700; color: #111; }
     .old-price { font-size: 0.85rem; color: var(--text-muted); text-decoration: line-through; }
     .discount { font-size: 0.85rem; color: var(--accent); font-weight: 600; }
 
-    /* Flipkart / Amazon Style Buy & Cart Buttons */
     .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.6rem; }
     .btn-add-cart { background: var(--secondary); color: white; border: none; padding: 0.6rem 0.2rem; font-size: 0.85rem; font-weight: 700; border-radius: 3px; cursor: pointer; text-transform: uppercase; }
     .btn-buy-now { background: var(--amazon-orange); color: #111; border: none; padding: 0.6rem 0.2rem; font-size: 0.85rem; font-weight: 700; border-radius: 3px; cursor: pointer; text-transform: uppercase; }
-    .btn-add-cart:hover { opacity: 0.9; }
-    .btn-buy-now:hover { opacity: 0.9; }
+    .btn-add-cart:hover, .btn-buy-now:hover { opacity: 0.9; }
 
-    /* Drawer Cart */
+    /* Cart Drawer */
     .cart-drawer { position: fixed; right: -420px; top: 0; width: 100%; max-width: 400px; height: 100%; background: #fff; z-index: 105; box-shadow: -3px 0 10px rgba(0,0,0,0.15); transition: 0.3s; display: flex; flex-direction: column; }
     .cart-drawer.open { right: 0; }
     .drawer-header { padding: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--primary); color: white; }
@@ -76,7 +104,7 @@
     .drawer-item img { width: 55px; height: 55px; object-fit: contain; }
     .drawer-footer { padding: 1rem; border-top: 1px solid var(--border); background: #fafafa; }
 
-    /* Amazon/Flipkart Multi-Step Checkout Modal */
+    /* Checkout Modal */
     .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; display: none; align-items: center; justify-content: center; padding: 1rem; }
     .modal-backdrop.open { display: flex; }
     .checkout-modal { background: #fff; width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; border-radius: 4px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
@@ -86,10 +114,9 @@
     .step-title { font-size: 1rem; font-weight: 700; color: #212121; margin: 1rem 0 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
     .step-badge { background: #eaeaea; color: #333; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; border-radius: 50%; font-weight: bold; }
 
-    .address-card { border: 1px solid #c2e0ff; background: #f7faff; padding: 0.8rem; border-radius: 4px; margin-bottom: 0.8rem; font-size: 0.9rem; line-height: 1.4; }
     .address-input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 0.8rem; }
     .address-input-group.full { grid-template-columns: 1fr; }
-    .address-input-group input, .address-input-group textarea, select { width: 100%; border: 1px solid var(--border); padding: 0.6rem; font-size: 0.85rem; border-radius: 3px; outline: none; }
+    .address-input-group input, .address-input-group textarea { width: 100%; border: 1px solid var(--border); padding: 0.6rem; font-size: 0.85rem; border-radius: 3px; outline: none; }
     .address-input-group input:focus, textarea:focus { border-color: var(--primary); }
 
     .payment-option-grid { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin-top: 0.8rem; }
@@ -106,11 +133,17 @@
   <!-- Top Navbar -->
   <header>
     <div class="nav-container">
-      <a href="#" class="brand">LuxeStore <span>Plus<i class="fa-solid fa-plus"></i></span></a>
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search for Products, Brands and More" oninput="filterItems()">
-        <button><i class="fa-solid fa-magnifying-glass"></i></button>
+      <a href="#" class="brand" onclick="resetToAll()">LuxeStore <span>Plus<i class="fa-solid fa-plus"></i></span></a>
+      
+      <!-- Auto-Suggest Search Bar -->
+      <div class="search-wrapper">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search for Products, Brands and More" autocomplete="off" oninput="handleSearchInput(this.value)" onkeydown="checkEnterKey(event)">
+          <button onclick="executeSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        <div class="suggestions-dropdown" id="suggestionsBox"></div>
       </div>
+
       <div class="nav-actions">
         <button class="nav-btn" onclick="toggleCartDrawer()">
           <i class="fa-solid fa-cart-shopping"></i> Cart
@@ -146,7 +179,7 @@
     </div>
   </div>
 
-  <!-- Universal Order/Address Modal -->
+  <!-- Delivery Address & Payment Modal -->
   <div class="modal-backdrop" id="checkoutModal">
     <div class="checkout-modal">
       <div class="modal-top">
@@ -155,7 +188,6 @@
       </div>
       <form class="checkout-body" onsubmit="finalizeOrder(event)">
         
-        <!-- Step 1: Address -->
         <div class="step-title"><span class="step-badge">1</span> Delivery Address</div>
         <div class="address-input-group">
           <input type="text" id="custName" placeholder="Full Name *" required>
@@ -169,7 +201,6 @@
           <textarea id="custAddress" rows="2" placeholder="Flat, House no., Building, Street Area *" required></textarea>
         </div>
 
-        <!-- Step 2: Payment Mode -->
         <div class="step-title"><span class="step-badge">2</span> Payment Options</div>
         <div class="payment-option-grid">
           <label class="pay-card">
@@ -190,7 +221,6 @@
           </label>
         </div>
 
-        <!-- Summary -->
         <div class="summary-box">
           <span id="summaryTitle">Total Amount Payable:</span>
           <b id="summaryAmount" style="color:var(--accent); font-size: 1.1rem;">₹0</b>
@@ -202,7 +232,7 @@
   </div>
 
   <script>
-    // 210 Products Data Generation
+    // Categories and Products Setup (210 Unique Products)
     const categories = [
       { id: "all", name: "All Categories" },
       { id: "mobiles", name: "Mobiles", img: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400" },
@@ -217,7 +247,6 @@
     const catalog = [];
     let pId = 1;
 
-    // Build 30 products for each category (7 x 30 = 210)
     categories.slice(1).forEach(cat => {
       for(let i = 1; i <= 30; i++) {
         const basePrice = Math.floor(Math.random() * 3000) + 499;
@@ -226,7 +255,7 @@
 
         catalog.push({
           id: pId++,
-          name: `${cat.name} Premium Edition ${i}`,
+          name: `${cat.name} Pro Edition ${i}`,
           category: cat.id,
           price: basePrice,
           originalPrice: originalPrice,
@@ -240,9 +269,9 @@
 
     let cart = [];
     let activeCategory = "all";
-    let activeCheckoutItem = null; // null means checking out entire cart
+    let activeCheckoutItem = null;
 
-    // Build Categories Strip
+    // Render Categories
     const catContainer = document.getElementById('categoriesContainer');
     categories.forEach(c => {
       const btn = document.createElement('div');
@@ -252,15 +281,21 @@
         document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
         btn.classList.add('active');
         activeCategory = c.id;
+        document.getElementById('searchInput').value = '';
+        closeSuggestions();
         filterItems();
       };
       catContainer.appendChild(btn);
     });
 
-    // Render Amazon/Flipkart Cards
+    // Render Product Cards
     function renderGrid(items) {
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
+      if(items.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted); font-size: 1.1rem;">No matching products found!</div>';
+        return;
+      }
       items.forEach(p => {
         const card = document.createElement('div');
         card.className = 'item-card';
@@ -289,14 +324,87 @@
       });
     }
 
+    // Auto-Suggest & Search Functionality
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsBox = document.getElementById('suggestionsBox');
+
+    function handleSearchInput(query) {
+      const val = query.trim().toLowerCase();
+      if (!val) {
+        closeSuggestions();
+        filterItems();
+        return;
+      }
+
+      // Filter matched product names for auto-suggestions
+      const matches = catalog.filter(p => p.name.toLowerCase().includes(val)).slice(0, 7);
+
+      if (matches.length > 0) {
+        suggestionsBox.innerHTML = '';
+        matches.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'suggestion-item';
+          div.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> <span>${highlightMatch(item.name, val)}</span>`;
+          div.onclick = () => selectSuggestion(item.name);
+          suggestionsBox.appendChild(div);
+        });
+        suggestionsBox.classList.add('active');
+      } else {
+        closeSuggestions();
+      }
+
+      filterItems();
+    }
+
+    function highlightMatch(text, query) {
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, "<b>$1</b>");
+    }
+
+    function selectSuggestion(name) {
+      searchInput.value = name;
+      closeSuggestions();
+      executeSearch();
+    }
+
+    function executeSearch() {
+      closeSuggestions();
+      filterItems();
+    }
+
+    function checkEnterKey(e) {
+      if (e.key === "Enter") {
+        executeSearch();
+      }
+    }
+
+    function closeSuggestions() {
+      suggestionsBox.classList.remove('active');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-wrapper')) {
+        closeSuggestions();
+      }
+    });
+
     function filterItems() {
-      const term = document.getElementById('searchInput').value.toLowerCase();
+      const term = searchInput.value.toLowerCase().trim();
       const filtered = catalog.filter(p => {
         const matchCat = (activeCategory === 'all' || p.category === activeCategory);
         const matchSearch = p.name.toLowerCase().includes(term);
         return matchCat && matchSearch;
       });
       renderGrid(filtered);
+    }
+
+    function resetToAll() {
+      searchInput.value = '';
+      activeCategory = 'all';
+      document.querySelectorAll('.cat-item').forEach((el, index) => {
+        el.classList.toggle('active', index === 0);
+      });
+      filterItems();
     }
 
     // Cart Management
@@ -340,7 +448,7 @@
       document.getElementById('cartSubtotal').innerText = `₹${sum.toLocaleString()}`;
     }
 
-    // Checkout Flow: "Buy Now" vs "Cart Checkout"
+    // Direct Buy Now & Checkout Modal Management
     function triggerDirectBuy(id) {
       activeCheckoutItem = catalog.find(x => x.id === id);
       document.getElementById('summaryTitle').innerText = `Buying: ${activeCheckoutItem.name}`;
@@ -372,7 +480,6 @@
       const city = document.getElementById('custCity').value;
       const pin = document.getElementById('custPin').value;
       const method = document.querySelector('input[name="paymethod"]:checked').value;
-
       const orderItemCount = activeCheckoutItem ? 1 : cart.length;
 
       alert(`🎉 ORDER PLACED SUCCESSFULLY!\n\nDeliver to: ${name}\nAddress: ${address}, ${city} - ${pin}\nPayment Mode: ${method}\nTotal Products: ${orderItemCount}`);
@@ -384,8 +491,8 @@
       closeModal();
     }
 
-    // Initialize Page
+    // Initial Load
     renderGrid(catalog);
   </script>
 </body>
-          </html>
+            </html>
