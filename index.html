@@ -3,661 +3,389 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LuxeStore | Premium Shopping Experience</title>
+  <title>LuxeStore | India's Premium Shopping Hub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #6366f1;
-      --primary-dark: #4f46e5;
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent: #10b981;
-      --danger: #ef4444;
-      --border: #334155;
+      --primary: #2874f0;        /* Flipkart Blue */
+      --secondary: #fb641b;      /* Flipkart Orange */
+      --amazon-yellow: #ffd814;  /* Amazon Buy Now Yellow */
+      --amazon-orange: #ffa41c;
+      --bg: #f1f3f6;
+      --card-bg: #ffffff;
+      --text: #212121;
+      --text-muted: #878787;
+      --accent: #388e3c;        /* Green Offers */
+      --border: #e0e0e0;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    /* Top Navbar */
+    header { background: var(--primary); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .nav-container { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1.5rem; gap: 1.5rem; }
+    .brand { font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; font-style: italic; display: flex; align-items: center; gap: 0.3rem; }
+    .brand span { color: #ffe500; font-size: 0.9rem; font-style: normal; }
 
-    /* Navbar */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(16px);
-      background: rgba(15, 23, 42, 0.85);
-      border-bottom: 1px solid var(--border);
-    }
+    .search-bar { flex: 1; max-width: 600px; position: relative; background: #fff; border-radius: 4px; display: flex; }
+    .search-bar input { width: 100%; border: none; outline: none; padding: 0.7rem 1rem; border-radius: 4px 0 0 4px; font-size: 0.95rem; }
+    .search-bar button { background: #fff; border: none; padding: 0 1rem; color: var(--primary); cursor: pointer; border-radius: 0 4px 4px 0; }
 
-    .navbar {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-    }
+    .nav-actions { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-btn { background: transparent; border: none; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; position: relative; }
+    .cart-badge { background: #ff6161; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.75rem; position: absolute; top: -8px; right: -10px; font-weight: bold; }
 
-    .logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #a5b4fc, #6366f1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+    /* Amazon/Flipkart Subnav Categories */
+    .cat-strip { background: #fff; border-bottom: 1px solid var(--border); overflow-x: auto; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .cat-strip-inner { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0.6rem 1rem; }
+    .cat-item { padding: 0.4rem 1rem; font-size: 0.9rem; font-weight: 500; color: #333; cursor: pointer; border-radius: 20px; border: 1px solid transparent; }
+    .cat-item.active, .cat-item:hover { background: #ebf4ff; color: var(--primary); border-color: #bad8ff; }
 
-    .search-box {
-      flex: 1;
-      max-width: 500px;
-      position: relative;
-    }
+    /* Amazon/Flipkart Grid Layout */
+    .main-container { max-width: 1300px; margin: 1.5rem auto; padding: 0 1rem; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
 
-    .search-box input {
-      width: 100%;
-      padding: 0.7rem 1rem 0.7rem 2.8rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 9999px;
-      color: var(--text);
-      outline: none;
-      transition: 0.3s;
-    }
+    .item-card { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; transition: box-shadow 0.2s ease; position: relative; }
+    .item-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.1); }
+    .image-box { width: 100%; height: 210px; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 0.8rem; }
+    .image-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-    .search-box input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
-    }
+    .item-title { font-size: 0.95rem; font-weight: 600; color: #212121; line-height: 1.3; height: 2.6rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 0.4rem; }
+    .rating-badge { background: #388e3c; color: white; display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.75rem; padding: 0.2rem 0.4rem; border-radius: 3px; font-weight: bold; width: fit-content; }
+    .assured-badge { height: 16px; margin-left: 0.5rem; vertical-align: middle; }
 
-    .search-box i {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-    }
+    .price-section { margin: 0.6rem 0; display: flex; align-items: baseline; gap: 0.5rem; }
+    .curr-price { font-size: 1.25rem; font-weight: 700; color: #111; }
+    .old-price { font-size: 0.85rem; color: var(--text-muted); text-decoration: line-through; }
+    .discount { font-size: 0.85rem; color: var(--accent); font-weight: 600; }
 
-    .cart-btn {
-      position: relative;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      border: none;
-      color: #fff;
-      padding: 0.7rem 1.4rem;
-      border-radius: 9999px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: 0.3s;
-    }
+    /* Flipkart / Amazon Style Buy & Cart Buttons */
+    .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.6rem; }
+    .btn-add-cart { background: var(--secondary); color: white; border: none; padding: 0.6rem 0.2rem; font-size: 0.85rem; font-weight: 700; border-radius: 3px; cursor: pointer; text-transform: uppercase; }
+    .btn-buy-now { background: var(--amazon-orange); color: #111; border: none; padding: 0.6rem 0.2rem; font-size: 0.85rem; font-weight: 700; border-radius: 3px; cursor: pointer; text-transform: uppercase; }
+    .btn-add-cart:hover { opacity: 0.9; }
+    .btn-buy-now:hover { opacity: 0.9; }
 
-    .cart-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-    }
+    /* Drawer Cart */
+    .cart-drawer { position: fixed; right: -420px; top: 0; width: 100%; max-width: 400px; height: 100%; background: #fff; z-index: 105; box-shadow: -3px 0 10px rgba(0,0,0,0.15); transition: 0.3s; display: flex; flex-direction: column; }
+    .cart-drawer.open { right: 0; }
+    .drawer-header { padding: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--primary); color: white; }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+    .drawer-item { display: flex; gap: 0.8rem; border-bottom: 1px solid var(--border); padding-bottom: 0.8rem; align-items: center; }
+    .drawer-item img { width: 55px; height: 55px; object-fit: contain; }
+    .drawer-footer { padding: 1rem; border-top: 1px solid var(--border); background: #fafafa; }
 
-    .cart-badge {
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.75rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 9999px;
-      font-weight: bold;
-    }
+    /* Amazon/Flipkart Multi-Step Checkout Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; display: none; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-backdrop.open { display: flex; }
+    .checkout-modal { background: #fff; width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; border-radius: 4px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+    .modal-top { background: var(--primary); color: #fff; padding: 1rem; font-weight: bold; font-size: 1.1rem; display: flex; justify-content: space-between; }
+    .checkout-body { padding: 1.5rem; }
 
-    /* Categories Bar */
-    .categories {
-      display: flex;
-      gap: 0.8rem;
-      overflow-x: auto;
-      padding: 1rem 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      scrollbar-width: none;
-    }
+    .step-title { font-size: 1rem; font-weight: 700; color: #212121; margin: 1rem 0 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .step-badge { background: #eaeaea; color: #333; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; border-radius: 50%; font-weight: bold; }
 
-    .categories::-webkit-scrollbar {
-      display: none;
-    }
+    .address-card { border: 1px solid #c2e0ff; background: #f7faff; padding: 0.8rem; border-radius: 4px; margin-bottom: 0.8rem; font-size: 0.9rem; line-height: 1.4; }
+    .address-input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 0.8rem; }
+    .address-input-group.full { grid-template-columns: 1fr; }
+    .address-input-group input, .address-input-group textarea, select { width: 100%; border: 1px solid var(--border); padding: 0.6rem; font-size: 0.85rem; border-radius: 3px; outline: none; }
+    .address-input-group input:focus, textarea:focus { border-color: var(--primary); }
 
-    .cat-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 0.5rem 1.2rem;
-      border-radius: 9999px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: 0.3s;
-      font-size: 0.9rem;
-    }
+    .payment-option-grid { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin-top: 0.8rem; }
+    .pay-card { border: 1px solid var(--border); padding: 0.8rem; border-radius: 4px; display: flex; align-items: center; gap: 0.8rem; cursor: pointer; }
+    .pay-card:hover { border-color: var(--primary); background: #fcfcfc; }
+    .pay-card input { accent-color: var(--primary); }
 
-    .cat-btn.active, .cat-btn:hover {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    /* Main Container */
-    main {
-      flex: 1;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem;
-      width: 100%;
-    }
-
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1.5rem;
-    }
-
-    /* Product Card */
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s, border-color 0.3s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: var(--primary);
-    }
-
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 0.75rem;
-      background: #0b0f19;
-    }
-
-    .card-body {
-      margin-top: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .tag {
-      font-size: 0.75rem;
-      color: var(--primary);
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    .title {
-      font-size: 1rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .price-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0.5rem;
-    }
-
-    .price {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .add-btn {
-      background: rgba(99, 102, 241, 0.15);
-      color: #a5b4fc;
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      padding: 0.5rem 0.8rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.2s;
-    }
-
-    .add-btn:hover {
-      background: var(--primary);
-      color: white;
-    }
-
-    /* Cart Drawer */
-    .drawer-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
-      z-index: 100;
-      display: none;
-    }
-
-    .drawer {
-      position: fixed;
-      top: 0; right: -420px;
-      width: 100%;
-      max-width: 400px;
-      height: 100%;
-      background: var(--card-bg);
-      z-index: 101;
-      box-shadow: -5px 0 25px rgba(0,0,0,0.5);
-      transition: right 0.3s ease;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .drawer.open { right: 0; }
-    .drawer-overlay.open { display: block; }
-
-    .drawer-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .drawer-items {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .cart-item {
-      display: flex;
-      gap: 1rem;
-      background: var(--bg);
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      align-items: center;
-    }
-
-    .cart-item img {
-      width: 50px;
-      height: 50px;
-      border-radius: 0.25rem;
-      object-fit: cover;
-    }
-
-    .cart-item-info {
-      flex: 1;
-    }
-
-    .cart-item-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .cart-item-price {
-      color: var(--accent);
-      font-size: 0.85rem;
-    }
-
-    .drawer-footer {
-      padding: 1.5rem;
-      border-top: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .checkout-btn {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      transition: 0.2s;
-    }
-
-    .checkout-btn:hover { filter: brightness(1.1); }
-
-    /* Checkout Modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      padding: 1rem;
-    }
-
-    .modal-overlay.open { display: flex; }
-
-    .modal {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-      width: 100%;
-      max-width: 550px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 2rem;
-    }
-
-    .modal h2 { margin-bottom: 1rem; font-size: 1.3rem; }
-    
-    .form-group {
-      margin-bottom: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .form-group label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .form-group input, .form-group textarea, .form-group select {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 0.6rem 0.8rem;
-      border-radius: 0.4rem;
-      color: #fff;
-      outline: none;
-    }
-
-    .payment-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-      margin: 1rem 0;
-    }
-
-    .payment-option {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-    }
-
-    .payment-option input { margin-right: 0.3rem; }
+    .summary-box { background: #fafafa; border: 1px dashed var(--border); padding: 0.8rem; margin: 1rem 0; font-size: 0.9rem; display: flex; justify-content: space-between; }
+    .order-submit-btn { width: 100%; background: var(--secondary); color: white; border: none; padding: 0.9rem; font-size: 1.05rem; font-weight: 700; cursor: pointer; border-radius: 3px; text-transform: uppercase; }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- Top Navbar -->
   <header>
-    <div class="navbar">
-      <a href="#" class="logo"><i class="fa-solid fa-cube"></i> LuxeStore</a>
-      <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="Search 200+ products..." oninput="filterProducts()">
+    <div class="nav-container">
+      <a href="#" class="brand">LuxeStore <span>Plus<i class="fa-solid fa-plus"></i></span></a>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search for Products, Brands and More" oninput="filterItems()">
+        <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
-      <button class="cart-btn" onclick="toggleCart()">
-        <i class="fa-solid fa-bag-shopping"></i>
-        <span class="cart-badge" id="cartCount">0</span>
-      </button>
+      <div class="nav-actions">
+        <button class="nav-btn" onclick="toggleCartDrawer()">
+          <i class="fa-solid fa-cart-shopping"></i> Cart
+          <span class="cart-badge" id="cartCount">0</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- Categories -->
-  <div class="categories" id="categoryContainer"></div>
+  <!-- Categories Strip -->
+  <div class="cat-strip">
+    <div class="cat-strip-inner" id="categoriesContainer"></div>
+  </div>
 
-  <!-- Products Main View -->
-  <main>
-    <div class="grid-container" id="productGrid"></div>
-  </main>
+  <!-- Main Showcase -->
+  <div class="main-container">
+    <div class="product-grid" id="productGrid"></div>
+  </div>
 
   <!-- Cart Drawer -->
-  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleCart()"></div>
-  <div class="drawer" id="cartDrawer">
+  <div class="cart-drawer" id="cartDrawer">
     <div class="drawer-header">
-      <h3>Your Shopping Cart</h3>
-      <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 1.2rem;" onclick="toggleCart()"></i>
+      <span>My Cart</span>
+      <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="toggleCartDrawer()"></i>
     </div>
-    <div class="drawer-items" id="cartItems"></div>
+    <div class="drawer-body" id="drawerBody"></div>
     <div class="drawer-footer">
-      <div style="display:flex; justify-content:space-between; font-weight:700;">
-        <span>Total:</span>
-        <span id="cartTotal">₹0</span>
+      <div style="display:flex; justify-content:space-between; margin-bottom: 0.8rem; font-weight:700;">
+        <span>Cart Subtotal:</span>
+        <span id="cartSubtotal">₹0</span>
       </div>
-      <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout</button>
+      <button class="btn-buy-now" style="width: 100%; padding: 0.8rem;" onclick="triggerCartCheckout()">Place Cart Order</button>
     </div>
   </div>
 
-  <!-- Checkout Modal -->
-  <div class="modal-overlay" id="checkoutModal">
-    <div class="modal">
-      <h2>Complete Delivery Details</h2>
-      <form id="orderForm" onsubmit="handlePlaceOrder(event)">
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" required placeholder="John Doe">
+  <!-- Universal Order/Address Modal -->
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="checkout-modal">
+      <div class="modal-top">
+        <span><i class="fa-solid fa-truck-fast"></i> Delivery Address & Payment</span>
+        <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal()"></i>
+      </div>
+      <form class="checkout-body" onsubmit="finalizeOrder(event)">
+        
+        <!-- Step 1: Address -->
+        <div class="step-title"><span class="step-badge">1</span> Delivery Address</div>
+        <div class="address-input-group">
+          <input type="text" id="custName" placeholder="Full Name *" required>
+          <input type="tel" id="custPhone" placeholder="10-digit Mobile Number *" required pattern="[0-9]{10}">
         </div>
-        <div class="form-group">
-          <label>Phone Number</label>
-          <input type="tel" required placeholder="+91 98765 43210">
+        <div class="address-input-group">
+          <input type="text" id="custPin" placeholder="Pincode (e.g. 110001) *" required>
+          <input type="text" id="custCity" placeholder="City / District *" required>
         </div>
-        <div class="form-group">
-          <label>Complete Shipping Address</label>
-          <textarea rows="2" required placeholder="House No, Street, City, Pincode"></textarea>
-        </div>
-
-        <h3 style="margin-top: 1.2rem; font-size: 1.1rem;">Select Payment Mode</h3>
-        <div class="payment-options">
-          <label class="payment-option">
-            <input type="radio" name="payment" value="Online - UPI" checked>
-            <span><i class="fa-solid fa-mobile-screen"></i> UPI / QR</span>
-          </label>
-          <label class="payment-option">
-            <input type="radio" name="payment" value="Credit / Debit Card">
-            <span><i class="fa-solid fa-credit-card"></i> Cards</span>
-          </label>
-          <label class="payment-option">
-            <input type="radio" name="payment" value="Net Banking">
-            <span><i class="fa-solid fa-building-columns"></i> Net Banking</span>
-          </label>
-          <label class="payment-option">
-            <input type="radio" name="payment" value="Cash On Delivery">
-            <span><i class="fa-solid fa-money-bill-wave"></i> COD</span>
-          </label>
+        <div class="address-input-group full">
+          <textarea id="custAddress" rows="2" placeholder="Flat, House no., Building, Street Area *" required></textarea>
         </div>
 
-        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-          <button type="button" class="add-btn" style="flex:1;" onclick="closeCheckout()">Cancel</button>
-          <button type="submit" class="checkout-btn" style="flex:2;">Confirm & Place Order</button>
+        <!-- Step 2: Payment Mode -->
+        <div class="step-title"><span class="step-badge">2</span> Payment Options</div>
+        <div class="payment-option-grid">
+          <label class="pay-card">
+            <input type="radio" name="paymethod" value="UPI" checked>
+            <span><i class="fa-brands fa-google-pay" style="color:var(--primary); font-size:1.2rem;"></i> UPI / QR (PhonePe, GPay, Paytm)</span>
+          </label>
+          <label class="pay-card">
+            <input type="radio" name="paymethod" value="Card">
+            <span><i class="fa-solid fa-credit-card" style="color:var(--secondary);"></i> Credit / Debit / ATM Card</span>
+          </label>
+          <label class="pay-card">
+            <input type="radio" name="paymethod" value="NetBanking">
+            <span><i class="fa-solid fa-building-columns"></i> Net Banking (All Indian Banks)</span>
+          </label>
+          <label class="pay-card">
+            <input type="radio" name="paymethod" value="COD">
+            <span><i class="fa-solid fa-hand-holding-dollar" style="color:var(--accent);"></i> Cash on Delivery (COD)</span>
+          </label>
         </div>
+
+        <!-- Summary -->
+        <div class="summary-box">
+          <span id="summaryTitle">Total Amount Payable:</span>
+          <b id="summaryAmount" style="color:var(--accent); font-size: 1.1rem;">₹0</b>
+        </div>
+
+        <button type="submit" class="order-submit-btn">Deliver Here & Confirm Order</button>
       </form>
     </div>
   </div>
 
   <script>
-    // 1. Setup Categories & 210 Products Generator
+    // 210 Products Data Generation
     const categories = [
-      { name: "All", id: "all" },
-      { name: "Headphones", id: "headphones", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" },
-      { name: "Earbuds", id: "earbuds", img: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300" },
-      { name: "Mobiles", id: "mobiles", img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300" },
-      { name: "Jeans", id: "jeans", img: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=300" },
-      { name: "Shirts", id: "shirts", img: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=300" },
-      { name: "Ladies Wear", id: "ladies", img: "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?w=300" },
-      { name: "Gents Wear", id: "gents", img: "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=300" }
+      { id: "all", name: "All Categories" },
+      { id: "mobiles", name: "Mobiles", img: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400" },
+      { id: "headphones", name: "Headphones", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" },
+      { id: "earbuds", name: "Wireless Earbuds", img: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400" },
+      { id: "shirts", name: "Men's Shirts", img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400" },
+      { id: "jeans", name: "Jeans & Trousers", img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400" },
+      { id: "ladies", name: "Women's Fashion", img: "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?w=400" },
+      { id: "gents", name: "Men's Accessories", img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" }
     ];
 
-    const products = [];
-    let idCounter = 1;
+    const catalog = [];
+    let pId = 1;
 
-    // Generate 30 items per category (7 categories * 30 = 210 items total)
+    // Build 30 products for each category (7 x 30 = 210)
     categories.slice(1).forEach(cat => {
       for(let i = 1; i <= 30; i++) {
-        products.push({
-          id: idCounter++,
+        const basePrice = Math.floor(Math.random() * 3000) + 499;
+        const discountRate = Math.floor(Math.random() * 40) + 10;
+        const originalPrice = Math.round(basePrice / (1 - (discountRate / 100)));
+
+        catalog.push({
+          id: pId++,
+          name: `${cat.name} Premium Edition ${i}`,
           category: cat.id,
-          name: `${cat.name} Edition ${i}`,
-          price: Math.floor(Math.random() * 4000) + 499,
+          price: basePrice,
+          originalPrice: originalPrice,
+          discount: discountRate,
+          rating: (Math.random() * 1.5 + 3.5).toFixed(1),
+          reviews: Math.floor(Math.random() * 500) + 20,
           image: cat.img
         });
       }
     });
 
     let cart = [];
-    let activeCategory = 'all';
+    let activeCategory = "all";
+    let activeCheckoutItem = null; // null means checking out entire cart
 
-    // 2. Render Categories
-    const categoryContainer = document.getElementById('categoryContainer');
-    categories.forEach(cat => {
-      const btn = document.createElement('button');
-      btn.className = `cat-btn ${cat.id === 'all' ? 'active' : ''}`;
-      btn.innerText = cat.name;
-      btn.onclick = () => selectCategory(cat.id, btn);
-      categoryContainer.appendChild(btn);
+    // Build Categories Strip
+    const catContainer = document.getElementById('categoriesContainer');
+    categories.forEach(c => {
+      const btn = document.createElement('div');
+      btn.className = `cat-item ${c.id === 'all' ? 'active' : ''}`;
+      btn.innerText = c.name;
+      btn.onclick = () => {
+        document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = c.id;
+        filterItems();
+      };
+      catContainer.appendChild(btn);
     });
 
-    function selectCategory(catId, element) {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      element.classList.add('active');
-      activeCategory = catId;
-      filterProducts();
-    }
-
-    // 3. Render Products
-    function renderProducts(list) {
+    // Render Amazon/Flipkart Cards
+    function renderGrid(items) {
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
-      if(list.length === 0) {
-        grid.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1;">No matching products found.</p>';
-        return;
-      }
-      list.forEach(p => {
+      items.forEach(p => {
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'item-card';
         card.innerHTML = `
-          <img src="${p.image}" alt="${p.name}" loading="lazy">
-          <div class="card-body">
-            <span class="tag">${p.category}</span>
-            <div class="title">${p.name}</div>
-            <div class="price-row">
-              <span class="price">₹${p.price}</span>
-              <button class="add-btn" onclick="addToCart(${p.id})">+ Add</button>
+          <div>
+            <div class="image-box">
+              <img src="${p.image}" alt="${p.name}" loading="lazy">
             </div>
+            <div class="item-title" title="${p.name}">${p.name}</div>
+            <div>
+              <span class="rating-badge">${p.rating} <i class="fa-solid fa-star" style="font-size:0.65rem;"></i></span>
+              <span style="font-size:0.8rem; color:var(--text-muted);">(${p.reviews})</span>
+            </div>
+            <div class="price-section">
+              <span class="curr-price">₹${p.price.toLocaleString()}</span>
+              <span class="old-price">₹${p.originalPrice.toLocaleString()}</span>
+              <span class="discount">${p.discount}% off</span>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button class="btn-add-cart" onclick="addToCart(${p.id})"><i class="fa-solid fa-cart-shopping"></i> Add</button>
+            <button class="btn-buy-now" onclick="triggerDirectBuy(${p.id})"><i class="fa-solid fa-bolt"></i> Buy Now</button>
           </div>
         `;
         grid.appendChild(card);
       });
     }
 
-    // Filter Logic
-    function filterProducts() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = products.filter(p => {
-        const matchesCategory = (activeCategory === 'all' || p.category === activeCategory);
-        const matchesSearch = p.name.toLowerCase().includes(query);
-        return matchesCategory && matchesSearch;
+    function filterItems() {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = catalog.filter(p => {
+        const matchCat = (activeCategory === 'all' || p.category === activeCategory);
+        const matchSearch = p.name.toLowerCase().includes(term);
+        return matchCat && matchSearch;
       });
-      renderProducts(filtered);
+      renderGrid(filtered);
     }
 
-    // 4. Cart Logic
-    function toggleCart() {
+    // Cart Management
+    function toggleCartDrawer() {
       document.getElementById('cartDrawer').classList.toggle('open');
-      document.getElementById('drawerOverlay').classList.toggle('open');
     }
 
-    function addToCart(productId) {
-      const item = products.find(p => p.id === productId);
-      cart.push(item);
-      updateCart();
+    function addToCart(id) {
+      const prod = catalog.find(x => x.id === id);
+      cart.push(prod);
+      updateCartDisplay();
+      toggleCartDrawer();
     }
 
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      updateCart();
+    function removeCartItem(idx) {
+      cart.splice(idx, 1);
+      updateCartDisplay();
     }
 
-    function updateCart() {
+    function updateCartDisplay() {
       document.getElementById('cartCount').innerText = cart.length;
-      const cartContainer = document.getElementById('cartItems');
-      cartContainer.innerHTML = '';
-      let total = 0;
+      const body = document.getElementById('drawerBody');
+      body.innerHTML = '';
+      let sum = 0;
 
       cart.forEach((item, index) => {
-        total += item.price;
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.innerHTML = `
+        sum += item.price;
+        const row = document.createElement('div');
+        row.className = 'drawer-item';
+        row.innerHTML = `
           <img src="${item.image}">
-          <div class="cart-item-info">
-            <div class="cart-item-title">${item.name}</div>
-            <div class="cart-item-price">₹${item.price}</div>
+          <div style="flex:1;">
+            <div style="font-size:0.85rem; font-weight:600;">${item.name}</div>
+            <div style="color:var(--accent); font-weight:bold;">₹${item.price.toLocaleString()}</div>
           </div>
-          <i class="fa-solid fa-trash" style="cursor:pointer; color:var(--danger);" onclick="removeFromCart(${index})"></i>
+          <i class="fa-solid fa-trash" style="color:red; cursor:pointer;" onclick="removeCartItem(${index})"></i>
         `;
-        cartContainer.appendChild(div);
+        body.appendChild(row);
       });
 
-      document.getElementById('cartTotal').innerText = `₹${total}`;
+      document.getElementById('cartSubtotal').innerText = `₹${sum.toLocaleString()}`;
     }
 
-    // 5. Checkout & Order Processing
-    function openCheckout() {
+    // Checkout Flow: "Buy Now" vs "Cart Checkout"
+    function triggerDirectBuy(id) {
+      activeCheckoutItem = catalog.find(x => x.id === id);
+      document.getElementById('summaryTitle').innerText = `Buying: ${activeCheckoutItem.name}`;
+      document.getElementById('summaryAmount').innerText = `₹${activeCheckoutItem.price.toLocaleString()}`;
+      document.getElementById('checkoutModal').classList.add('open');
+    }
+
+    function triggerCartCheckout() {
       if(cart.length === 0) {
         alert("Aapka cart khali hai!");
         return;
       }
-      toggleCart();
+      activeCheckoutItem = null;
+      let total = cart.reduce((acc, curr) => acc + curr.price, 0);
+      document.getElementById('summaryTitle').innerText = `Items (${cart.length}):`;
+      document.getElementById('summaryAmount').innerText = `₹${total.toLocaleString()}`;
+      toggleCartDrawer();
       document.getElementById('checkoutModal').classList.add('open');
     }
 
-    function closeCheckout() {
+    function closeModal() {
       document.getElementById('checkoutModal').classList.remove('open');
     }
 
-    function handlePlaceOrder(e) {
+    function finalizeOrder(e) {
       e.preventDefault();
-      const payMethod = document.querySelector('input[name="payment"]:checked').value;
-      alert(`Success! Order placed successfully via [${payMethod}]. Total Items: ${cart.length}`);
-      cart = [];
-      updateCart();
-      closeCheckout();
+      const name = document.getElementById('custName').value;
+      const address = document.getElementById('custAddress').value;
+      const city = document.getElementById('custCity').value;
+      const pin = document.getElementById('custPin').value;
+      const method = document.querySelector('input[name="paymethod"]:checked').value;
+
+      const orderItemCount = activeCheckoutItem ? 1 : cart.length;
+
+      alert(`🎉 ORDER PLACED SUCCESSFULLY!\n\nDeliver to: ${name}\nAddress: ${address}, ${city} - ${pin}\nPayment Mode: ${method}\nTotal Products: ${orderItemCount}`);
+
+      if(!activeCheckoutItem) {
+        cart = [];
+        updateCartDisplay();
+      }
+      closeModal();
     }
 
-    // Initial Render
-    renderProducts(products);
+    // Initialize Page
+    renderGrid(catalog);
   </script>
 </body>
-  </html>
+          </html>
