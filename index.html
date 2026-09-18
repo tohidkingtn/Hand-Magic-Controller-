@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LuxeStore | Premium Shopping Experience</title>
+  <title>LuxeStore | India's Premium Shopping Hub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Razorpay Official Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     :root {
       --primary: #2874f0;
@@ -67,7 +69,7 @@
     .nav-btn { background: transparent; border: none; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; position: relative; }
     .cart-badge { background: #ff6161; color: white; border-radius: 50%; padding: 0.1rem 0.4rem; font-size: 0.75rem; position: absolute; top: -8px; right: -10px; font-weight: bold; }
 
-    /* Category Filter Strip */
+    /* Category Strip */
     .cat-strip { background: #fff; border-bottom: 1px solid var(--border); overflow-x: auto; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .cat-strip-inner { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0.6rem 1rem; }
     .cat-item { padding: 0.4rem 1rem; font-size: 0.9rem; font-weight: 500; color: #333; cursor: pointer; border-radius: 20px; border: 1px solid transparent; }
@@ -186,7 +188,7 @@
         <span><i class="fa-solid fa-truck-fast"></i> Delivery Address & Payment</span>
         <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal()"></i>
       </div>
-      <form class="checkout-body" onsubmit="finalizeOrder(event)">
+      <form class="checkout-body" onsubmit="handleRazorpayPayment(event)">
         
         <div class="step-title"><span class="step-badge">1</span> Delivery Address</div>
         <div class="address-input-group">
@@ -201,23 +203,15 @@
           <textarea id="custAddress" rows="2" placeholder="Flat, House no., Building, Street Area *" required></textarea>
         </div>
 
-        <div class="step-title"><span class="step-badge">2</span> Payment Options</div>
+        <div class="step-title"><span class="step-badge">2</span> Payment Method</div>
         <div class="payment-option-grid">
           <label class="pay-card">
-            <input type="radio" name="paymethod" value="UPI" checked>
-            <span><i class="fa-brands fa-google-pay" style="color:var(--primary); font-size:1.2rem;"></i> UPI / QR (PhonePe, GPay, Paytm)</span>
-          </label>
-          <label class="pay-card">
-            <input type="radio" name="paymethod" value="Card">
-            <span><i class="fa-solid fa-credit-card" style="color:var(--secondary);"></i> Credit / Debit / ATM Card</span>
-          </label>
-          <label class="pay-card">
-            <input type="radio" name="paymethod" value="NetBanking">
-            <span><i class="fa-solid fa-building-columns"></i> Net Banking (All Indian Banks)</span>
+            <input type="radio" name="paymethod" value="ONLINE" checked>
+            <span><i class="fa-solid fa-bolt" style="color:var(--primary); font-size:1.1rem;"></i> Online Instant Payment (UPI, Cards, Net Banking)</span>
           </label>
           <label class="pay-card">
             <input type="radio" name="paymethod" value="COD">
-            <span><i class="fa-solid fa-hand-holding-dollar" style="color:var(--accent);"></i> Cash on Delivery (COD)</span>
+            <span><i class="fa-solid fa-hand-holding-dollar" style="color:var(--accent); font-size:1.1rem;"></i> Cash on Delivery (COD)</span>
           </label>
         </div>
 
@@ -226,12 +220,15 @@
           <b id="summaryAmount" style="color:var(--accent); font-size: 1.1rem;">₹0</b>
         </div>
 
-        <button type="submit" class="order-submit-btn">Deliver Here & Confirm Order</button>
+        <button type="submit" class="order-submit-btn" id="payBtnText">Proceed To Pay</button>
       </form>
     </div>
   </div>
 
   <script>
+    // Configured with your Razorpay Key
+    const RAZORPAY_KEY = "RZ3PTNLImiWFrDaGkRYIpUsb";
+
     // Categories and Products Setup (210 Unique Products)
     const categories = [
       { id: "all", name: "All Categories" },
@@ -271,7 +268,7 @@
     let activeCategory = "all";
     let activeCheckoutItem = null;
 
-    // Render Categories
+    // Render Categories Strip
     const catContainer = document.getElementById('categoriesContainer');
     categories.forEach(c => {
       const btn = document.createElement('div');
@@ -336,7 +333,6 @@
         return;
       }
 
-      // Filter matched product names for auto-suggestions
       const matches = catalog.filter(p => p.name.toLowerCase().includes(val)).slice(0, 7);
 
       if (matches.length > 0) {
@@ -448,7 +444,7 @@
       document.getElementById('cartSubtotal').innerText = `₹${sum.toLocaleString()}`;
     }
 
-    // Direct Buy Now & Checkout Modal Management
+    // Direct Buy Now & Checkout
     function triggerDirectBuy(id) {
       activeCheckoutItem = catalog.find(x => x.id === id);
       document.getElementById('summaryTitle').innerText = `Buying: ${activeCheckoutItem.name}`;
@@ -473,18 +469,61 @@
       document.getElementById('checkoutModal').classList.remove('open');
     }
 
-    function finalizeOrder(e) {
+    // Razorpay Live Payment Gateway Execution
+    function handleRazorpayPayment(e) {
       e.preventDefault();
+
       const name = document.getElementById('custName').value;
+      const phone = document.getElementById('custPhone').value;
       const address = document.getElementById('custAddress').value;
       const city = document.getElementById('custCity').value;
       const pin = document.getElementById('custPin').value;
       const method = document.querySelector('input[name="paymethod"]:checked').value;
-      const orderItemCount = activeCheckoutItem ? 1 : cart.length;
 
-      alert(`🎉 ORDER PLACED SUCCESSFULLY!\n\nDeliver to: ${name}\nAddress: ${address}, ${city} - ${pin}\nPayment Mode: ${method}\nTotal Products: ${orderItemCount}`);
+      const totalAmount = activeCheckoutItem 
+        ? activeCheckoutItem.price 
+        : cart.reduce((acc, curr) => acc + curr.price, 0);
 
-      if(!activeCheckoutItem) {
+      // Handle Cash On Delivery
+      if (method === 'COD') {
+        alert(`🎉 ORDER PLACED (COD)!\n\nName: ${name}\nDelivery Address: ${address}, ${city} - ${pin}\nTotal Payable: ₹${totalAmount.toLocaleString()}`);
+        finishOrder();
+        return;
+      }
+
+      // Razorpay Checkout Options
+      const options = {
+        key: RAZORPAY_KEY,
+        amount: totalAmount * 100, // paise me convert kiya jata hai
+        currency: "INR",
+        name: "LuxeStore",
+        description: activeCheckoutItem ? activeCheckoutItem.name : `Order of ${cart.length} items`,
+        image: "https://cdn-icons-png.flaticon.com/512/3081/3081559.png",
+        handler: function (response) {
+          alert(`🎉 PAYMENT SUCCESSFUL!\n\nPayment ID: ${response.razorpay_payment_id}\nCustomer: ${name}\nDelivering to: ${address}, ${city} - ${pin}\nTotal Paid: ₹${totalAmount.toLocaleString()}`);
+          finishOrder();
+        },
+        prefill: {
+          name: name,
+          contact: phone
+        },
+        notes: {
+          address: `${address}, ${city} - ${pin}`
+        },
+        theme: {
+          color: "#2874f0"
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        alert(`Payment Failed: ${response.error.description}`);
+      });
+      rzp.open();
+    }
+
+    function finishOrder() {
+      if (!activeCheckoutItem) {
         cart = [];
         updateCartDisplay();
       }
@@ -495,4 +534,4 @@
     renderGrid(catalog);
   </script>
 </body>
-            </html>
+        </html>
